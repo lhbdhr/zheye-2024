@@ -1,12 +1,7 @@
 <script setup lang="ts">
 import { PropType, computed } from "vue";
+import { ColumnProps } from "../testData";
 import imgUrl from "../assets/vue.svg";
-export interface ColumnProps {
-  id: number;
-  title: string;
-  avatar?: string;
-  description: string;
-}
 const props = defineProps({
   list: {
     type: Array as PropType<ColumnProps[]>,
@@ -21,13 +16,12 @@ const columnList = computed(() => {
     return column;
   });
 });
-// props.list && props.list[0].avatar;
 </script>
 
 <template>
-  <div class="row">
-    <div class="col-3" v-for="column in columnList" :key="column.id">
-      <div class="card h-100 shadow-sm mb-4" style="width: 18rem">
+  <div class="row row-col-4">
+    <div class="col my-2 mx-1" v-for="column in columnList" :key="column.id">
+      <div class="card h-100 shadow-sm" style="width: 18rem">
         <div class="card-body text-center">
           <img
             class="rounded-circle border border-light w-25 my-3"
