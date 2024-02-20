@@ -2,6 +2,7 @@
 import { PropType } from "vue";
 import { UserProps } from "../testData";
 import Dropdown from "./Dropdown.vue";
+import DropdownItem from "./DropdownItem.vue";
 defineProps({
   user: Object as PropType<UserProps>,
 });
@@ -19,8 +20,31 @@ defineProps({
     </ul>
     <ul v-else class="list-inline mb-0">
       <li class="list-inline-item">
-        <Dropdown :title="`你好：${user.username}`"></Dropdown>
+        <Dropdown :title="`你好：${user.username}`">
+          <DropdownItem disabled
+            ><router-link to="/create" class="dropdown-item"
+              >新建文章</router-link
+            ></DropdownItem
+          >
+          <DropdownItem
+            ><router-link to="/create" class="dropdown-item"
+              >我的专栏</router-link
+            ></DropdownItem
+          >
+          <DropdownItem
+            ><router-link to="/create" class="dropdown-item"
+              >编辑资料</router-link
+            ></DropdownItem
+          >
+          <DropdownItem
+            ><router-link to="/create" class="dropdown-item"
+              >退出登陆</router-link
+            ></DropdownItem
+          >
+        </Dropdown>
       </li>
     </ul>
   </nav>
 </template>
+
+<style scoped></style>

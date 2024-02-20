@@ -1,19 +1,35 @@
 <template>
-  <div class="dropdown">
-    <a href="#" class="btn btn-outline-light my-2 dropdown-toggle">{{
-      title
-    }}</a>
-    <ul class="dropdown-menu">
-      <li><a class="dropdown-item" href="#">新建文章</a></li>
-      <li><a class="dropdown-item" href="#">编辑资料</a></li>
+  <div class="dropdown" ref="dropdownRef">
+    <a
+      href="#"
+      class="btn btn-outline-light my-2 dropdown-toggle"
+      @click.prevent="toggleOpen"
+    >
+      {{ title }}
+    </a>
+    <ul class="dropdown-menu d-block dropdown-menu-end" v-if="isOpen">
+      <slot></slot>
     </ul>
   </div>
 </template>
 <script setup lang="ts">
+import { watch, ref } from "vue";
+import useClickOutside from "../hooks/useClickOutside";
 defineProps({
   title: {
     type: String,
     required: true,
   },
+});
+const dropdownRef = ref(null);
+const isClickOutside = useClickOutside(dropdownRef);
+let isOpen = ref(false);
+function toggleOpen() {
+  isOpen.value = !isOpen.value;
+}
+watch(isClickOutside, () => {
+  if (isOpen.value && isClickOutside.value) {
+    isOpen.value = false;
+  }
 });
 </script>
