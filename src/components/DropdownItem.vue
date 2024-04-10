@@ -13,7 +13,7 @@ defineProps({
 </script>
 
 <style scoped>
-.dropdown-option.is-disabled ::v-slotted(*) {
+.dropdown-option.is-disabled :slotted(*) {
   color: #6c757d;
   pointer-events: none;
   background-color: transparent;
