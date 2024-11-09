@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import ColumnList from "./components/ColumnList.vue";
-import GlobalHeader from "./components/GlobalHeader.vue";
-import { columnLists, user } from "./testData";
+import ColumnList from './components/ColumnList.vue'
+import GlobalHeader from './components/GlobalHeader.vue'
+import { columnLists, user } from './testData'
 </script>
 
 <template>
   <div class="container">
     <GlobalHeader :user="user"></GlobalHeader>
-    <ColumnList :list="columnLists" />
+    <router-view>
+      <ColumnList :list="columnLists" />
+    </router-view>
     <footer class="text-center py-4 text-secondary bg-light mt-6">
       <small>
         <ul class="list-inline mb-0">

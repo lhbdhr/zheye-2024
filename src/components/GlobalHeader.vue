@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { PropType } from "vue";
-import { UserProps } from "../testData";
-import Dropdown from "./Dropdown.vue";
-import DropdownItem from "./DropdownItem.vue";
+import { PropType } from 'vue'
+import { UserProps } from '../testData'
+import Dropdown from './Dropdown.vue'
+import DropdownItem from './DropdownItem.vue'
 defineProps({
   user: Object as PropType<UserProps>,
-});
+})
 </script>
 <template>
   <nav class="navbar navbar-dark bg-primary justify-content-between mb-4 px-4">
