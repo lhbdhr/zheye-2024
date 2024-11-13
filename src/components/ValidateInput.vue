@@ -86,4 +86,11 @@ onMounted(() => {
 })
 </script>
 
-<style></style>
+<style>
+.validate-input-container {
+  position: relative;
+}
+.invalid-feedback {
+  position: absolute;
+}
+</style>

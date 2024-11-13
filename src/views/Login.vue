@@ -40,7 +40,6 @@ const passwordRules: RulesProp = [
 const onFormSubmit = (result: boolean) => {
   console.log('result', result)
 }
-const emailVal = ref('dkdkkd@kdkdkkd.com')
-// const emailVal = ref('')
-const passwordVal = ref('11111')
+const emailVal = ref('')
+const passwordVal = ref('')
 </script>
