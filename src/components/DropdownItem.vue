@@ -1,5 +1,5 @@
 <template>
-  <li class="dropdown-option" :class="{ 'is-disabled': disabled }">
+  <li class="dropdown-item" :class="{ 'is-disabled': disabled }">
     <slot>项目一</slot>
   </li>
 </template>
@@ -9,11 +9,11 @@ defineProps({
     default: false,
     type: Boolean,
   },
-});
+})
 </script>
 
 <style scoped>
-.dropdown-option.is-disabled :slotted(*) {
+.dropdown-item.is-disabled :slotted(*) {
   color: #6c757d;
   pointer-events: none;
   background-color: transparent;
