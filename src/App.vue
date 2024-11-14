@@ -21,4 +21,13 @@ import GlobalHeader from './components/GlobalHeader.vue'
   </footer>
 </template>
 
-<style scoped></style>
+<style scoped>
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+.container {
+  margin-bottom: 100px;
+}
+</style>

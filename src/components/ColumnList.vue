@@ -32,7 +32,11 @@ const columnList = computed(() => {
           <p class="card-text text-left description text-secondary">
             {{ column.description }}
           </p>
-          <a href="#" class="btn btn-outline-primary">进入专栏</a>
+          <router-link
+            :to="`column/${column.id}`"
+            class="btn btn-outline-primary"
+            >进入专栏</router-link
+          >
         </div>
       </div>
     </div>
