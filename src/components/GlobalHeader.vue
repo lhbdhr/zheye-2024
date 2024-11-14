@@ -24,28 +24,28 @@ defineProps({
     </ul>
     <ul v-else class="list-inline mb-0">
       <li class="list-inline-item">
-        <Dropdown :title="`你好：${user.username}`">
-          <DropdownItem disabled
+        <dropdown :title="`你好：${user.username}`">
+          <dropdown-item disabled
             ><router-link to="/login" class="dropdown-item"
               >新建文章</router-link
-            ></DropdownItem
+            ></dropdown-item
           >
-          <DropdownItem
+          <dropdown-item
             ><router-link to="/login" class="dropdown-item"
               >我的专栏</router-link
-            ></DropdownItem
+            ></dropdown-item
           >
-          <DropdownItem
+          <dropdown-item
             ><router-link to="/login" class="dropdown-item"
               >编辑资料</router-link
-            ></DropdownItem
+            ></dropdown-item
           >
-          <DropdownItem
+          <dropdown-item
             ><router-link to="/login" class="dropdown-item"
               >退出登陆</router-link
-            ></DropdownItem
+            ></dropdown-item
           >
-        </Dropdown>
+        </dropdown>
       </li>
     </ul>
   </nav>

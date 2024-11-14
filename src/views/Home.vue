@@ -12,7 +12,7 @@
       </div>
     </section>
     <h4 class="font-weight-bold text-center">发现精彩</h4>
-    <ColumnList :list="columnLists" />
+    <column-list :list="columnLists"></column-list>
   </div>
 </template>
 
