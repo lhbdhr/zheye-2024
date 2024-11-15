@@ -10,8 +10,14 @@ export const useColumnStore = defineStore('column', {
   state: () => ({
     columns: [] as ColumnProps[],
   }),
+  getters: {
+    getColumnById: (state) => {
+      return (id: string) => state.columns.find((c) => c._id === id)
+    },
+  },
   actions: {
     fetchAllColumns() {},
+
     addTestColumn() {
       this.columns.push(
         {

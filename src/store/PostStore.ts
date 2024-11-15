@@ -17,10 +17,20 @@ export const usePostStore = defineStore('post', {
   state: () => ({
     posts: [] as PostProps[],
   }),
-  actions: {
-    addPost(post: PostProps) {
-      this.posts.push(post)
+  getters: {
+    getPostsByCid: (state) => {
+      return (cid: string) => state.posts.filter((post) => post.column === cid)
     },
+    getpostById(state) {
+      return (id: string) => state.posts.find((post) => post._id === id)
+    },
+  },
+  actions: {
+    createPost(post: PostProps) {
+      this.posts.push(post)
+      return post._id
+    },
+
     addTestPosts() {
       this.posts.push(
         {

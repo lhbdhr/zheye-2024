@@ -25,9 +25,9 @@ import { useRoute } from 'vue-router'
 import { useColumnStore } from '@/store/ColumnStore'
 import { usePostStore } from '@/store/PostStore'
 const route = useRoute()
-const currentId = route.params.id
+const currentId = route.params.id as string
 const columnStore = useColumnStore()
 const PostStore = usePostStore()
-const column = columnStore.columns.find((c) => c._id === currentId)
-const posts = PostStore.posts.filter((p) => p.column === currentId)
+const column = columnStore.getColumnById(currentId)
+const posts = PostStore.getPostsByCid(currentId)
 </script>
