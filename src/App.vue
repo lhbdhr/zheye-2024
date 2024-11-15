@@ -1,10 +1,5 @@
-<script setup lang="ts">
-import { user } from './testData'
-import GlobalHeader from './components/GlobalHeader.vue'
-</script>
-
 <template>
-  <GlobalHeader :user="user"></GlobalHeader>
+  <GlobalHeader :is-login="isLogin" :user="user"></GlobalHeader>
   <div class="container">
     <router-view></router-view>
   </div>
@@ -20,6 +15,14 @@ import GlobalHeader from './components/GlobalHeader.vue'
     </small>
   </footer>
 </template>
+
+<script setup lang="ts">
+import { useUserStore } from '@/store/UserStore'
+import GlobalHeader from '@/components/GlobalHeader.vue'
+const userStore = useUserStore()
+const user = userStore.userdata
+const isLogin = userStore.isLogin
+</script>
 
 <style scoped>
 footer {

@@ -6,7 +6,7 @@
     >
       <div class="col-3 text-center">
         <img
-          :src="column.avatar"
+          :src="column.avatar?.url"
           :alt="column.title"
           class="rounded-circle border"
         />
@@ -22,9 +22,12 @@
 <script setup lang="ts">
 import PostList from '@/components/PostList.vue'
 import { useRoute } from 'vue-router'
-import { testPosts, columnLists } from '@/testData'
+import { useColumnStore } from '@/store/ColumnStore'
+import { usePostStore } from '@/store/PostStore'
 const route = useRoute()
-const currentId = +route.params.id
-const column = columnLists.find((c) => c.id === currentId)
-const posts = testPosts.filter((p) => p.columnId === currentId)
+const currentId = route.params.id
+const columnStore = useColumnStore()
+const PostStore = usePostStore()
+const column = columnStore.columns.find((c) => c._id === currentId)
+const posts = PostStore.posts.filter((p) => p.column === currentId)
 </script>

@@ -12,11 +12,20 @@
       </div>
     </section>
     <h4 class="font-weight-bold text-center">发现精彩</h4>
-    <column-list :list="columnLists"></column-list>
+    <column-list :list="columns"></column-list>
   </div>
 </template>
 
 <script setup lang="ts">
 import ColumnList from '../components/ColumnList.vue'
-import { columnLists } from '../testData'
+import { storeToRefs } from 'pinia'
+import { useColumnStore } from '@/store/ColumnStore'
+import { usePostStore } from '@/store/PostStore'
+import { onMounted } from 'vue'
+const columnStore = useColumnStore()
+const { columns } = storeToRefs(columnStore)
+onMounted(() => {
+  columnStore.addTestColumn()
+  usePostStore().addTestPosts()
+})
 </script>
