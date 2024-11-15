@@ -19,7 +19,6 @@ emitter.on('form-item-created', callback)
 
 const emit = defineEmits(['form-submit'])
 const submitForm = () => {
-  console.log('submitForm')
   const result = funcArr.map((func) => func()).every((result) => result)
   emit('form-submit', result)
 }
