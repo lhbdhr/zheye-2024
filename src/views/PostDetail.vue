@@ -4,7 +4,7 @@
     <h5>{{ post.author }}</h5>
     <h5>{{ post.createdAt }}</h5>
     <p><img v-if="imageURL" :src="imageURL" alt="post.title" /></p>
-    <p>{{ post.content }}</p>
+    <p>{{ post.excerpt }}</p>
   </div>
 </template>
 
@@ -16,5 +16,5 @@ const route = useRoute()
 const postStore = usePostStore()
 const currentId = route.params.id as string
 const post = postStore.getpostById(currentId)
-const imageURL = useImageURL(post?.image)
+const imageURL = useImageURL(post?.image, 50, 50)
 </script>

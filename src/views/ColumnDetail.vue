@@ -8,7 +8,7 @@
         <img
           :src="column.avatar?.url"
           :alt="column.title"
-          class="rounded-circle border"
+          class="rounded-circle border w-100"
         />
       </div>
       <div class="col-9">
