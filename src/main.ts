@@ -5,9 +5,15 @@ import App from './App.vue'
 import router from '@/router'
 import 'bootstrap/dist/css/bootstrap.min.css'
 const pinia = createPinia()
+import { useGlobalStore } from './store/GlobalStore'
 
+createApp(App).use(pinia).use(router).mount('#app')
+
+const globalStore = useGlobalStore()
 axios.defaults.baseURL = 'http://apis.imooc.com/api'
 axios.interceptors.request.use((config) => {
+  globalStore.setError({ status: false })
+  globalStore.setLoading(true)
   // get 请求，添加 icode 到 URL
   config.params = { ...config.params, icode: 'DBE1B4E7AD5FC313' }
   // 其他请求 添加 icode 到 body 中
@@ -21,4 +27,14 @@ axios.interceptors.request.use((config) => {
   return config
 })
 
-createApp(App).use(pinia).use(router).mount('#app')
+axios.interceptors.response.use(
+  (response) => {
+    globalStore.setLoading(false)
+    return response
+  },
+  (error) => {
+    globalStore.setError({ status: true, message: error.message })
+    globalStore.setLoading(false)
+    return Promise.reject(error)
+  }
+)

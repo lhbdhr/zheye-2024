@@ -1,5 +1,6 @@
 <template>
   <GlobalHeader :is-login="isLogin" :user="user"></GlobalHeader>
+  <loading v-if="isLoading" :text="'加载中'"></loading>
   <div class="container">
     <router-view></router-view>
   </div>
@@ -18,10 +19,16 @@
 
 <script setup lang="ts">
 import { useUserStore } from '@/store/UserStore'
+import { useGlobalStore } from './store/GlobalStore'
 import GlobalHeader from '@/components/GlobalHeader.vue'
+import { computed } from 'vue'
+import Loading from './components/Loading.vue'
+const globalStore = useGlobalStore()
 const userStore = useUserStore()
 const user = userStore.userdata
 const isLogin = userStore.isLogin
+const isLoading = computed(() => globalStore.loading)
+// const error = computed(() => globalStore.error)
 </script>
 
 <style scoped>
