@@ -17,15 +17,17 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, onUnmounted } from 'vue'
 import ColumnList from '../components/ColumnList.vue'
 import { storeToRefs } from 'pinia'
 import { useColumnStore } from '@/store/ColumnStore'
-import { usePostStore } from '@/store/PostStore'
-import { onMounted } from 'vue'
 const columnStore = useColumnStore()
 const { columns } = storeToRefs(columnStore)
 onMounted(() => {
-  columnStore.addTestColumn()
-  usePostStore().addTestPosts()
+  console.log('Home mounted')
+  columnStore.fetchColumns()
+})
+onUnmounted(() => {
+  console.log('Home unmounted')
 })
 </script>
