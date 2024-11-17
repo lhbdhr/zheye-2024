@@ -14,27 +14,17 @@
   </teleport>
 </template>
 
-<script lang="ts">
-import { defineComponent, onUnmounted } from 'vue'
-
-export default defineComponent({
-  props: {
-    text: {
-      type: String,
-    },
-    background: {
-      type: String,
-    },
+<script setup lang="ts">
+import useDomCreate from '@/hooks/useDomCreate'
+defineProps({
+  text: {
+    type: String,
   },
-  setup() {
-    const node = document.createElement('div')
-    node.id = 'back'
-    document.body.appendChild(node)
-    onUnmounted(() => {
-      document.body.removeChild(node)
-    })
+  background: {
+    type: String,
   },
 })
+useDomCreate('back')
 </script>
 
 <style>

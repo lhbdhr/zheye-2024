@@ -6,6 +6,7 @@ import ColumnDetail from './views/ColumnDetail.vue'
 import PostDetail from './views/PostDetail.vue'
 import CreatePost from './views/CreatePost.vue'
 import { useUserStore } from './store/UserStore'
+import { storeToRefs } from 'pinia'
 
 const routes = [
   {
@@ -47,13 +48,14 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const userStore = useUserStore()
-  if (to.meta.requiredLogin && !userStore.isLogin) {
+  const { isLogin, info } = storeToRefs(useUserStore())
+  if (to.meta.requiredLogin && !isLogin.value) {
     next({ name: 'login' })
-  } else if (to.meta.redirectAlreadyLogin && userStore.isLogin) {
+  } else if (to.meta.redirectAlreadyLogin && isLogin.value && info?.value) {
     next({ name: 'home' })
   } else {
     next()
+    console.log(isLogin.value)
   }
 })
 export default router

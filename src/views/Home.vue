@@ -22,9 +22,13 @@
 import { onMounted, onUnmounted } from 'vue'
 import ColumnList from '../components/ColumnList.vue'
 import { storeToRefs } from 'pinia'
+import { useUserStore } from '@/store/UserStore'
 import { useColumnStore } from '@/store/ColumnStore'
 const columnStore = useColumnStore()
 const { columns } = storeToRefs(columnStore)
+const { token } = useUserStore()
+console.log(token)
+
 onMounted(() => {
   console.log('Home mounted')
   columnStore.fetchColumns()

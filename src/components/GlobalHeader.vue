@@ -1,18 +1,3 @@
-<script setup lang="ts">
-import { PropType } from 'vue'
-import { UserDataProps } from '@/store/UserStore'
-import Dropdown from './Dropdown.vue'
-import DropdownItem from './DropdownItem.vue'
-defineProps({
-  user: {
-    type: Object as PropType<UserDataProps>,
-  },
-  isLogin: {
-    type: Boolean,
-    required: true,
-  },
-})
-</script>
 <template>
   <nav class="navbar navbar-dark bg-primary justify-content-between mb-4 px-4">
     <router-link to="/" class="navbar-brand">者也专栏</router-link>
@@ -49,8 +34,8 @@ defineProps({
             ></dropdown-item
           >
           <dropdown-item
-            ><router-link :to="'/login'" class="dropdown-item"
-              >退出登陆</router-link
+            ><a href="#" @click="logoutHandler" class="dropdown-item"
+              >退出登陆</a
             ></dropdown-item
           >
         </dropdown>
@@ -58,5 +43,25 @@ defineProps({
     </ul>
   </nav>
 </template>
+<script setup lang="ts">
+import { PropType } from 'vue'
+import { UserDataProps, useUserStore } from '@/store/UserStore'
+import Dropdown from './Dropdown.vue'
+import DropdownItem from './DropdownItem.vue'
+defineProps({
+  user: {
+    type: Object as PropType<UserDataProps>,
+  },
+  isLogin: {
+    type: Boolean,
+    required: true,
+  },
+})
+const userStore = useUserStore()
+const logoutHandler = () => {
+  console.log('logoutHandler')
 
+  userStore.logout()
+}
+</script>
 <style scoped></style>

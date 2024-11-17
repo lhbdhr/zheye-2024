@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 
+export type MessageType = 'success' | 'error' | 'default'
+
 export interface GlobalErrorProps {
   status: boolean
   message?: string

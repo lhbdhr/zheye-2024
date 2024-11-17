@@ -1,6 +1,7 @@
 <template>
   <global-header :is-login="isLogin" :user="user"></global-header>
   <loading v-if="isLoading" :text="'加载中'"></loading>
+  <message v-if="error.status" type="error" :message="error.message"></message>
   <div class="container">
     <router-view></router-view>
   </div>
@@ -22,17 +23,18 @@ import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/store/UserStore'
 import { useGlobalStore } from './store/GlobalStore'
 import GlobalHeader from '@/components/GlobalHeader.vue'
-import Loading from './components/Loading.vue'
+import Loading from './components/Loader.vue'
 import { onMounted } from 'vue'
+import Message from './components/Message.vue'
 const globalStore = useGlobalStore()
 const userStore = useUserStore()
-const { userdata: user, isLogin } = storeToRefs(userStore)
-const { loading: isLoading } = storeToRefs(globalStore)
+const { info: user, isLogin } = storeToRefs(userStore)
+const { loading: isLoading, error } = storeToRefs(globalStore)
 
 onMounted(() => {
   const token = localStorage.getItem('token')
-  if (token) {
-    userStore.token = token
+  if (token && userStore.info == undefined) {
+    userStore.updateToken(token)
     userStore.isLogin = true
     userStore.fetchCurrentUser()
   }

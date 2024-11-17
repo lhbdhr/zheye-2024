@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ImageProps } from './Utils'
+import router from '../router'
 import axios from 'axios'
 export interface UserDataProps {
   nickName?: string
@@ -12,7 +13,7 @@ export interface UserDataProps {
 export interface UserProps {
   isLogin: boolean
   token?: string
-  userdata?: UserDataProps
+  info?: UserDataProps
 }
 
 export const useUserStore = defineStore('user', {
@@ -20,29 +21,47 @@ export const useUserStore = defineStore('user', {
     return {
       isLogin: false,
       token: localStorage.getItem('token') || undefined,
-      userdata: undefined,
+      info: undefined,
     }
   },
   actions: {
+    updateToken(token: string) {
+      this.token = token
+      localStorage.setItem('token', this.token || '')
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    },
     login(email: string, password: string) {
-      axios.post('/user/login', { email, password }).then((resp) => {
-        this.token = resp.data.data.token
-        this.isLogin = true
-        localStorage.setItem('token', this.token || '')
-        this.fetchCurrentUser()
-      })
+      axios
+        .post('/user/login', { email, password })
+        .then((resp) => {
+          this.updateToken(resp.data.data.token)
+          this.isLogin = true
+          this.fetchCurrentUser()
+          router.push({ name: 'home' })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
     fetchCurrentUser() {
-      axios.get('/user/current').then((resp) => {
-        this.userdata = resp.data.data
-        console.log('fetchCurrentUser', resp.data.data)
-      })
+      axios
+        .get('/user/current')
+        .then((resp) => {
+          this.info = resp.data.data
+        })
+        .catch((err) => {
+          // localStorage.removeItem('token')
+          // this.isLogin = false
+          // this.token = undefined
+          // this.info = undefined
+          console.log(err)
+        })
     },
     logout() {
       this.token = undefined
       localStorage.removeItem('token')
       this.isLogin = false
-      this.userdata = undefined
+      this.info = undefined
     },
   },
 })

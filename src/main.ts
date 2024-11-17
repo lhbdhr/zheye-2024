@@ -5,14 +5,12 @@ import App from './App.vue'
 import router from '@/router'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { useGlobalStore } from './store/GlobalStore'
-import { useUserStore } from './store/UserStore'
 const app = createApp(App)
 const pinia = createPinia()
 app.use(pinia)
 app.use(router)
 const globalStore = useGlobalStore()
 axios.defaults.baseURL = 'http://apis.imooc.com/api'
-axios.defaults.headers.common.Authorization = `Bearer ${useUserStore().token}`
 axios.interceptors.request.use((config) => {
   globalStore.setError({ status: false })
   globalStore.setLoading(true)
