@@ -1,5 +1,5 @@
 <template>
-  <GlobalHeader :is-login="isLogin" :user="user"></GlobalHeader>
+  <global-header :is-login="isLogin" :user="user"></global-header>
   <loading v-if="isLoading" :text="'加载中'"></loading>
   <div class="container">
     <router-view></router-view>
@@ -18,17 +18,25 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/store/UserStore'
 import { useGlobalStore } from './store/GlobalStore'
 import GlobalHeader from '@/components/GlobalHeader.vue'
-import { computed } from 'vue'
 import Loading from './components/Loading.vue'
+import { onMounted } from 'vue'
 const globalStore = useGlobalStore()
 const userStore = useUserStore()
-const user = userStore.userdata
-const isLogin = userStore.isLogin
-const isLoading = computed(() => globalStore.loading)
-// const error = computed(() => globalStore.error)
+const { userdata: user, isLogin } = storeToRefs(userStore)
+const { loading: isLoading } = storeToRefs(globalStore)
+
+onMounted(() => {
+  const token = localStorage.getItem('token')
+  if (token) {
+    userStore.token = token
+    userStore.isLogin = true
+    userStore.fetchCurrentUser()
+  }
+})
 </script>
 
 <style scoped>

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ImageProps } from './Utils'
+import axios from 'axios'
 export interface UserDataProps {
   nickName?: string
   _id?: string
@@ -10,33 +11,38 @@ export interface UserDataProps {
 }
 export interface UserProps {
   isLogin: boolean
-  token: string | null
-  userdata: UserDataProps
+  token?: string
+  userdata?: UserDataProps
 }
 
 export const useUserStore = defineStore('user', {
   state: (): UserProps => {
     return {
-      isLogin: true,
-      token: localStorage.getItem('token') || null,
-      userdata: {
-        _id: '12345',
-        avatar: {
-          url: '',
-        },
-        column: '1',
-        description: '',
-        email: '1',
-        nickName: 'lhbdhr',
-      },
+      isLogin: false,
+      token: localStorage.getItem('token') || undefined,
+      userdata: undefined,
     }
   },
   actions: {
+    login(email: string, password: string) {
+      axios.post('/user/login', { email, password }).then((resp) => {
+        this.token = resp.data.data.token
+        this.isLogin = true
+        localStorage.setItem('token', this.token || '')
+        this.fetchCurrentUser()
+      })
+    },
+    fetchCurrentUser() {
+      axios.get('/user/current').then((resp) => {
+        this.userdata = resp.data.data
+        console.log('fetchCurrentUser', resp.data.data)
+      })
+    },
     logout() {
-      this.token = null
+      this.token = undefined
       localStorage.removeItem('token')
       this.isLogin = false
-      this.userdata = {}
+      this.userdata = undefined
     },
   },
 })

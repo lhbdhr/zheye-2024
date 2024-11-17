@@ -28,6 +28,8 @@
 import { ref } from 'vue'
 import BaseInput, { RulesProp } from '@/components/BaseInput.vue'
 import ValidateForm from '@/components/ValidateForm.vue'
+import { useUserStore } from '@/store/UserStore'
+const userStore = useUserStore()
 const emailVal = ref('')
 const emailRules: RulesProp = [
   { type: 'required', message: '邮箱地址不能为空' },
@@ -40,6 +42,8 @@ const passwordRules: RulesProp = [
   { type: 'range', min: 6, max: 16, message: '密码长度应该在6-16之间' },
 ]
 const onFormSubmit = (result: boolean) => {
-  console.log('result', result)
+  if (result) {
+    userStore.login(emailVal.value, passwordVal.value)
+  }
 }
 </script>
