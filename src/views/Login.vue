@@ -29,6 +29,8 @@ import { ref } from 'vue'
 import BaseInput, { RulesProp } from '@/components/BaseInput.vue'
 import ValidateForm from '@/components/ValidateForm.vue'
 import { useUserStore } from '@/store/UserStore'
+import createMessage from '@/components/createMessage'
+import router from '@/router'
 const userStore = useUserStore()
 const emailVal = ref('')
 const emailRules: RulesProp = [
@@ -41,9 +43,16 @@ const passwordRules: RulesProp = [
   { type: 'required', message: '密码不能为空' },
   { type: 'range', min: 6, max: 16, message: '密码长度应该在6-16之间' },
 ]
-const onFormSubmit = (result: boolean) => {
-  if (result) {
-    userStore.login(emailVal.value, passwordVal.value)
+const onFormSubmit = async (formResult: boolean) => {
+  if (formResult) {
+    try {
+      await userStore.login(emailVal.value, passwordVal.value)
+      await userStore.fetchCurrentUser()
+      createMessage('success', '登录成功, 2秒钟后将跳转至首页', 2000)
+      setTimeout(() => {
+        router.push({ name: 'home' })
+      }, 2000)
+    } catch (error) {}
   }
 }
 </script>

@@ -10,13 +10,15 @@ const createMessage = (
     type,
     message,
     onCloseMessage: () => {
-      destroy() // 调用销毁方法
+      destroy()
     },
   })
   const node = document.createElement('div')
   const destroy = () => {
     render(null, node)
-    document.body.removeChild(node)
+    if (node && document.body.contains(node)) {
+      document.body.removeChild(node)
+    }
   }
   document.body.appendChild(node)
   render(messageVnode, node)

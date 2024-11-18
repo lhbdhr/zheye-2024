@@ -48,6 +48,8 @@ import { PropType } from 'vue'
 import { UserDataProps, useUserStore } from '@/store/UserStore'
 import Dropdown from './Dropdown.vue'
 import DropdownItem from './DropdownItem.vue'
+import createMessage from './createMessage'
+import router from '@/router'
 defineProps({
   user: {
     type: Object as PropType<UserDataProps>,
@@ -59,7 +61,11 @@ defineProps({
 })
 const userStore = useUserStore()
 const logoutHandler = () => {
+  createMessage('success', '退出登陆成功, 2秒后会跳转至首页. ', 2000)
   userStore.logout()
+  setTimeout(() => {
+    router.push({ name: 'home' })
+  }, 2000)
 }
 </script>
 <style scoped></style>

@@ -4,3 +4,8 @@ export interface ImageProps {
   createdAt?: string
   fitUrl?: string
 }
+export interface ResponseType<P = Record<string, never>> {
+  code: number
+  data: P
+  msg: string
+}

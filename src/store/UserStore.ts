@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ImageProps } from './Utils'
+import { ImageProps, ResponseType } from './Utils'
 import router from '../router'
 import axios from 'axios'
 export interface UserDataProps {
@@ -27,38 +27,26 @@ export const useUserStore = defineStore('user', {
   actions: {
     updateToken(token: string) {
       this.token = token
-      localStorage.setItem('token', this.token || '')
+      localStorage.setItem('token', token)
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
     },
-    login(email: string, password: string) {
-      axios
-        .post('/user/login', { email, password })
-        .then((resp) => {
-          this.updateToken(resp.data.data.token)
-          this.isLogin = true
-          this.fetchCurrentUser()
-          router.push({ name: 'home' })
-        })
-        .catch(() => {})
+    async login(email: string, password: string) {
+      const { data } = await axios.post<ResponseType>('/user/login', {
+        email,
+        password,
+      })
+      this.updateToken(data.data.token)
+      this.isLogin = true
     },
-    fetchCurrentUser() {
-      axios
-        .get('/user/current')
-        .then((resp) => {
-          this.info = resp.data.data
-        })
-        .catch(() => {
-          localStorage.removeItem('token')
-          this.isLogin = false
-          this.token = undefined
-          this.info = undefined
-        })
+    async fetchCurrentUser() {
+      const { data } = await axios.get<ResponseType>('/user/current')
+      this.info = data.data
     },
     logout() {
       this.token = undefined
-      localStorage.removeItem('token')
       this.isLogin = false
       this.info = undefined
+      localStorage.removeItem('token')
     },
   },
 })
