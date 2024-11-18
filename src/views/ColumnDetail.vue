@@ -33,7 +33,6 @@ const column = computed(() => columnStore.getColumnById(currentId))
 const posts = computed(() => PostStore.getPostsByCid(currentId))
 
 onMounted(() => {
-  console.log('ColumnDetail mounted')
   columnStore.fetchColumnById(currentId)
   PostStore.fetchPostsByCid(currentId)
 })

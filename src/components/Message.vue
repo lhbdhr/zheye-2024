@@ -6,21 +6,19 @@
       v-if="isVisible"
     >
       <span>{{ message }}</span>
-      <button
-        type="button"
-        class="btn-close"
-        aria-label="Close"
-        @click="hide"
-      ></button>
+      <button type="button" class="btn-close" @click="hide"></button>
     </div>
   </teleport>
 </template>
 <script setup lang="ts">
-import { defineProps, PropType, defineEmits, ref } from 'vue'
-import { MessageType } from '@/store/GlobalStore'
+import { PropType, ref } from 'vue'
+import { MessageType } from '@/components/createMessage'
 import useDomCreate from '@/hooks/useDomCreate'
 const props = defineProps({
-  message: String,
+  message: {
+    required: false,
+    type: String,
+  },
   type: {
     type: String as PropType<MessageType>,
     default: 'default',

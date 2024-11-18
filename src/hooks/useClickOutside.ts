@@ -9,7 +9,6 @@ const useClickOutside = (elementRef: Ref<null | HTMLElement>) => {
       } else {
         isClickOutside.value = true
       }
-      // console.log(isClickOutside.value)
     }
   }
   onMounted(() => {

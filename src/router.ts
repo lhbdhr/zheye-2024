@@ -55,7 +55,6 @@ router.beforeEach((to, from, next) => {
     next({ name: 'home' })
   } else {
     next()
-    console.log(isLogin.value)
   }
 })
 export default router

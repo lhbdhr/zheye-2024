@@ -59,8 +59,6 @@ defineProps({
 })
 const userStore = useUserStore()
 const logoutHandler = () => {
-  console.log('logoutHandler')
-
   userStore.logout()
 }
 </script>

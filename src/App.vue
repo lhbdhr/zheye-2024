@@ -1,7 +1,6 @@
 <template>
   <global-header :is-login="isLogin" :user="user"></global-header>
   <loading v-if="isLoading" :text="'加载中'"></loading>
-  <message v-if="error.status" type="error" :message="error.message"></message>
   <div class="container">
     <router-view></router-view>
   </div>
@@ -24,12 +23,18 @@ import { useUserStore } from '@/store/UserStore'
 import { useGlobalStore } from './store/GlobalStore'
 import GlobalHeader from '@/components/GlobalHeader.vue'
 import Loading from './components/Loader.vue'
-import { onMounted } from 'vue'
-import Message from './components/Message.vue'
+import { onMounted, watch } from 'vue'
+import createMessage from './components/createMessage'
 const globalStore = useGlobalStore()
 const userStore = useUserStore()
 const { info: user, isLogin } = storeToRefs(userStore)
 const { loading: isLoading, error } = storeToRefs(globalStore)
+
+watch(error, () => {
+  if (error.value.status) {
+    createMessage('error', error.value.message)
+  }
+})
 
 onMounted(() => {
   const token = localStorage.getItem('token')

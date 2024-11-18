@@ -33,7 +33,7 @@ axios.interceptors.response.use(
     return response
   },
   (error) => {
-    globalStore.setError({ status: true, message: error.message })
+    globalStore.setError({ status: true, message: error.response.data.error })
     globalStore.setLoading(false)
     return Promise.reject(error)
   }

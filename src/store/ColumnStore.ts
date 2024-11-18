@@ -23,20 +23,15 @@ export const useColumnStore = defineStore('column', {
         .then((resp) => {
           this.columns = [resp.data.data]
         })
-        .catch((err) => {
-          console.log('getColumnById failed', err)
-        })
+        .catch(() => {})
     },
     fetchColumns() {
       axios
         .get('/columns')
         .then((resp) => {
           this.columns = resp.data.data.list
-          // console.log('fetchColumns', resp.data.data.list)
         })
-        .catch((err) => {
-          console.log(err)
-        })
+        .catch(() => {})
     },
   },
 })

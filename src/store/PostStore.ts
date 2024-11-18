@@ -36,22 +36,16 @@ export const usePostStore = defineStore('post', {
         .get(`/columns/${cid}/posts`)
         .then((resp) => {
           this.posts = resp.data.data.list
-          // console.log('fetchPostsByCid', resp.data.data.list)
         })
-        .catch((err) => {
-          console.log('fetchPostsByCid failed', err)
-        })
+        .catch(() => {})
     },
     fetchPostById(id: string) {
       axios
         .get(`/posts/${id}`)
         .then((resp) => {
           this.posts = resp.data.data
-          console.log('fetchPostById', resp.data.data)
         })
-        .catch((err) => {
-          console.log('fetchPostById failed', err)
-        })
+        .catch(() => {})
     },
   },
 })

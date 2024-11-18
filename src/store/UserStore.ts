@@ -39,9 +39,7 @@ export const useUserStore = defineStore('user', {
           this.fetchCurrentUser()
           router.push({ name: 'home' })
         })
-        .catch((err) => {
-          console.log(err)
-        })
+        .catch(() => {})
     },
     fetchCurrentUser() {
       axios
@@ -49,12 +47,11 @@ export const useUserStore = defineStore('user', {
         .then((resp) => {
           this.info = resp.data.data
         })
-        .catch((err) => {
-          // localStorage.removeItem('token')
-          // this.isLogin = false
-          // this.token = undefined
-          // this.info = undefined
-          console.log(err)
+        .catch(() => {
+          localStorage.removeItem('token')
+          this.isLogin = false
+          this.token = undefined
+          this.info = undefined
         })
     },
     logout() {
