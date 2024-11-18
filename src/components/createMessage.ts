@@ -9,9 +9,12 @@ const createMessage = (
   const messageVnode = h(Message, {
     type,
     message,
+    onCloseMessage: () => {
+      destroy() // 调用销毁方法
+    },
   })
   const node = document.createElement('div')
-  const destory = () => {
+  const destroy = () => {
     render(null, node)
     document.body.removeChild(node)
   }
@@ -19,11 +22,11 @@ const createMessage = (
   render(messageVnode, node)
   if (duration) {
     setTimeout(() => {
-      destory()
+      destroy()
     }, duration)
   }
   return {
-    destory,
+    destroy,
   }
 }
 
