@@ -32,9 +32,10 @@ const { loading: isLoading, error } = storeToRefs(globalStore)
 
 watch(error, () => {
   if (error.value.status) {
-    createMessage('error', error.value.message)
+    createMessage('error', error.value.message, 2000)
   }
 })
+createMessage('success', '登录成功')
 
 onMounted(() => {
   const token = localStorage.getItem('token')
