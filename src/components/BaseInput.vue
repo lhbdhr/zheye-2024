@@ -33,16 +33,16 @@ defineOptions({
 })
 const emailReg =
   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-interface RuleProp {
-  type: 'required' | 'email' | 'range'
+export interface RuleProp {
+  type: 'required' | 'email' | 'range' | 'custom'
   min?: number
   max?: number
   message: string
+  validator?: () => boolean
 }
-export type RulesProp = RuleProp[]
 export type TagType = 'input' | 'textarea'
 const props = defineProps({
-  rules: Array as PropType<RulesProp>,
+  rules: Array as PropType<RuleProp[]>,
   modelValue: String,
   tag: {
     type: String as PropType<TagType>,
@@ -83,6 +83,9 @@ const validateInput = () => {
           } else if (max !== undefined) {
             passed = len <= max
           }
+          break
+        case 'custom':
+          passed = rule.validator ? rule.validator() : true
           break
         default:
           break

@@ -26,20 +26,20 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
-import BaseInput, { RulesProp } from '@/components/BaseInput.vue'
+import BaseInput, { RuleProp } from '@/components/BaseInput.vue'
 import ValidateForm from '@/components/ValidateForm.vue'
 import { useUserStore } from '@/store/UserStore'
 import createMessage from '@/components/createMessage'
 import router from '@/router'
 const userStore = useUserStore()
 const emailVal = ref('')
-const emailRules: RulesProp = [
+const emailRules: RuleProp[] = [
   { type: 'required', message: '邮箱地址不能为空' },
   { type: 'email', message: '请输入正确的邮箱地址' },
 ]
 
 const passwordVal = ref('')
-const passwordRules: RulesProp = [
+const passwordRules: RuleProp[] = [
   { type: 'required', message: '密码不能为空' },
   { type: 'range', min: 6, max: 16, message: '密码长度应该在6-16之间' },
 ]

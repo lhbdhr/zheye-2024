@@ -27,11 +27,11 @@ export const usePostStore = defineStore('post', {
     },
   },
   actions: {
-    createPost(post: PostProps) {
-      this.posts.push(post)
-      return post._id
+    async createPost(post: PostProps): Promise<string> {
+      const { data } = await axios.post('/posts', post)
+      return data.data._id
     },
-    fetchPostsByCid(cid: string) {
+    async fetchPostsByCid(cid: string) {
       axios
         .get(`/columns/${cid}/posts`)
         .then((resp) => {
@@ -39,13 +39,9 @@ export const usePostStore = defineStore('post', {
         })
         .catch(() => {})
     },
-    fetchPostById(id: string) {
-      axios
-        .get(`/posts/${id}`)
-        .then((resp) => {
-          this.posts = resp.data.data
-        })
-        .catch(() => {})
+    async fetchPostById(id: string) {
+      const { data } = await axios.get(`/posts/${id}`)
+      this.posts = [data.data]
     },
   },
 })

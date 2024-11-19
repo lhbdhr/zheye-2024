@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import { ImageProps, ResponseType } from './Utils'
-import router from '../router'
 import axios from 'axios'
 export interface UserDataProps {
   nickName?: string
@@ -41,6 +40,10 @@ export const useUserStore = defineStore('user', {
     async fetchCurrentUser() {
       const { data } = await axios.get<ResponseType>('/user/current')
       this.info = data.data
+    },
+    async register(email: string, password: string, nickName: string) {
+      const payload = { email, password, nickName }
+      await axios.post<ResponseType>('/users', payload)
     },
     logout() {
       this.token = undefined

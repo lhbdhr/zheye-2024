@@ -35,34 +35,40 @@
 import ValidateForm from '../components/ValidateForm.vue'
 import BaseInput from '@/components/BaseInput.vue'
 import { ref } from 'vue'
-import { RulesProp } from '@/components/BaseInput.vue'
+import { RuleProp } from '@/components/BaseInput.vue'
 import { usePostStore } from '@/store/PostStore'
 import { useUserStore } from '@/store/UserStore'
 import router from '@/router'
+import { storeToRefs } from 'pinia'
+import createMessage from '@/components/createMessage'
 
 const titleVal = ref('')
-const titleRules: RulesProp = [
+const titleRules: RuleProp[] = [
   { type: 'required', message: '文章标题不能为空' },
   { type: 'range', message: '文章标题最少6个字符', min: 6 },
 ]
 const contentVal = ref('')
-const contentRules: RulesProp = [
+const contentRules: RuleProp[] = [
   { type: 'required', message: '文章详情不能为空' },
 ]
 
 const postStore = usePostStore()
-const userStore = useUserStore()
-const onFormSubmit = (result: boolean) => {
-  if (result) {
-    const id = postStore.createPost({
-      _id: Math.random().toString(16).slice(2).toString(),
-      title: titleVal.value,
-      content: contentVal.value,
-      column: userStore.userdata.column || '',
-      author: userStore.userdata._id,
-      createdAt: new Date().toLocaleString(),
-    })
-    router.push({ name: 'post', params: { id } })
-  }
+const userStore = storeToRefs(useUserStore())
+
+const onFormSubmit = async (formResult: boolean) => {
+  try {
+    if (formResult) {
+      const id = await postStore.createPost({
+        title: titleVal.value,
+        content: contentVal.value,
+        column: userStore.info?.value?.column || '',
+        author: userStore.info?.value?._id || '',
+      })
+      createMessage('success', '文章创建成功，2秒后跳转至文章', 2000)
+      setTimeout(() => {
+        router.push({ name: 'post', params: { id } })
+      }, 2000)
+    }
+  } catch (error) {}
 }
 </script>

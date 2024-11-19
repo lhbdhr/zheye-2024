@@ -5,6 +5,7 @@ import Login from './views/Login.vue'
 import ColumnDetail from './views/ColumnDetail.vue'
 import PostDetail from './views/PostDetail.vue'
 import CreatePost from './views/CreatePost.vue'
+import Singup from './views/Singup.vue'
 import { useUserStore } from './store/UserStore'
 import { storeToRefs } from 'pinia'
 
@@ -18,6 +19,14 @@ const routes = [
     path: '/login',
     name: 'login',
     component: Login,
+    meta: {
+      redirectAlreadyLogin: true,
+    },
+  },
+  {
+    path: '/singup',
+    name: 'singup',
+    component: Singup,
     meta: {
       redirectAlreadyLogin: true,
     },
