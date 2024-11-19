@@ -8,9 +8,7 @@
         <div class="row my-3 align-items-center">
           <div v-if="post.image" class="col-3">
             <img
-              :src="
-                'string' === typeof post.image ? post.image : post.image.url
-              "
+              :src="useImageURL(post.image, 'thumbnail', 100, 100)"
               alt="post.title"
               class="rounded-lg w-100"
             />
@@ -26,6 +24,7 @@
 <script setup lang="ts">
 import { PropType } from 'vue'
 import { PostProps } from '@/store/PostStore'
+import useImageURL from '@/hooks/useImageURL'
 defineProps({
   list: {
     required: true,

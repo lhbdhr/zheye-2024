@@ -2,7 +2,7 @@
   <global-header :is-login="isLogin" :user="user"></global-header>
   <loading v-if="isLoading" :text="'加载中'"></loading>
   <div class="container">
-    <router-view></router-view>
+    <router-view :key="route.path"></router-view>
   </div>
   <footer class="text-center py-4 text-secondary bg-light mt-6">
     <small>
@@ -25,6 +25,8 @@ import GlobalHeader from '@/components/GlobalHeader.vue'
 import Loading from './components/Loader.vue'
 import { onMounted, watch } from 'vue'
 import createMessage from './components/createMessage'
+import { useRoute } from 'vue-router'
+const route = useRoute()
 const globalStore = useGlobalStore()
 const userStore = useUserStore()
 const { info: user, isLogin } = storeToRefs(userStore)

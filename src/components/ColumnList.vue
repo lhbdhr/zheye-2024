@@ -5,7 +5,7 @@
         <div class="card-body text-center">
           <img
             class="rounded-circle border border-light my-3"
-            :src="column.avatar?.url"
+            :src="useImageURL(column.avatar, 'avatar', 50, 50)"
             :alt="column.title"
           />
           <h5 class="card-title text-truncate">{{ column.title }}</h5>
@@ -26,7 +26,6 @@
 <script setup lang="ts">
 import { PropType, computed } from 'vue'
 import { ColumnProps } from '@/store/ColumnStore'
-import imgUrl from '../assets/vue.svg'
 import useImageURL from '@/hooks/useImageURL'
 const props = defineProps({
   list: {
@@ -34,16 +33,8 @@ const props = defineProps({
     require: true,
   },
 })
-const columnList = computed(() => {
-  return props.list?.map((column) => {
-    if (!column.avatar) {
-      column.avatar = { url: imgUrl }
-    } else {
-      column.avatar.url = useImageURL(column.avatar, 50, 50)
-    }
-    return column
-  })
-})
+
+const columnList = computed(() => props.list)
 </script>
 
 <style scoped>

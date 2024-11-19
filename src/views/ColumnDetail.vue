@@ -6,7 +6,7 @@
     >
       <div class="col-3 text-center">
         <img
-          :src="column.avatar?.url"
+          :src="useImageURL(column.avatar, 'avatar', 100, 100)"
           :alt="column.title"
           class="rounded-circle border w-100"
         />
@@ -20,11 +20,12 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, computed } from 'vue'
+import { onMounted, computed, onUnmounted } from 'vue'
 import PostList from '@/components/PostList.vue'
 import { useRoute } from 'vue-router'
 import { useColumnStore } from '@/store/ColumnStore'
 import { usePostStore } from '@/store/PostStore'
+import useImageURL from '@/hooks/useImageURL'
 const route = useRoute()
 const currentId = route.params.id as string
 const columnStore = useColumnStore()
@@ -33,7 +34,11 @@ const column = computed(() => columnStore.getColumnById(currentId))
 const posts = computed(() => PostStore.getPostsByCid(currentId))
 
 onMounted(() => {
+  console.log('ColumnDetail mounted')
   columnStore.fetchColumnById(currentId)
   PostStore.fetchPostsByCid(currentId)
+})
+onUnmounted(() => {
+  console.log('ColumnDetail unmounted')
 })
 </script>
