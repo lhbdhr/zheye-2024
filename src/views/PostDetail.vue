@@ -2,8 +2,8 @@
   <article class="w-75 mx-auto mb-5 pb-3" v-if="post">
     <img
       :src="imageURL"
-      alt="{{post.title}}"
-      class="rounded-lg img-fluid my-4"
+      :alt="post.title"
+      class="toutu rounded-lg img-fluid my-4"
       v-if="imageURL"
     />
     <h2 class="mb-4">{{ post.title }}</h2>
@@ -35,7 +35,8 @@ const route = useRoute()
 const postStore = usePostStore()
 const currentId = route.params.id as string
 const post = computed(() => postStore.getpostById(currentId))
-const imageURL = useImageURL(post?.value?.image, 'origin')
+const imageURL = computed(() => useImageURL(post?.value?.image, 'origin'))
+
 const currentHTML = computed(() => {
   if (post.value && post.value.content) {
     const { isHTML, content } = post.value
@@ -48,3 +49,11 @@ onMounted(async () => {
   await postStore.fetchPostById(currentId)
 })
 </script>
+
+<style scoped>
+.toutu {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+</style>

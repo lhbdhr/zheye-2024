@@ -7,20 +7,28 @@ const useImageURL = (
   width?: number | undefined,
   height?: number | undefined
 ) => {
-  if (typeof image === 'string') {
+  if (image === undefined) {
+    if (type === 'avatar') {
+      return imgUrl
+    }
+    return ''
+  } else if (typeof image === 'string') {
     if (imageUrlReg.test(image)) {
       return image + widthAndHeight(width, height)
+    } else if (image === '') {
+      return ''
     }
     return image
-  } else if (image && image.url) {
-    if (imageUrlReg.test(image.url)) {
+  } else if (typeof image === 'object') {
+    if (image.url === undefined) {
+      if (type === 'avatar') {
+        return imgUrl
+      }
+      return ''
+    } else if (imageUrlReg.test(image.url)) {
       return image.url + widthAndHeight(width, height)
     }
     return image.url
-  } else if (type === 'avatar') {
-    return imgUrl
-  } else {
-    return ''
   }
 }
 function widthAndHeight(width: number | undefined, height: number | undefined) {

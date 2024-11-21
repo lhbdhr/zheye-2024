@@ -1,6 +1,10 @@
 <template>
   <div class="file-upload">
-    <div class="file-upload-container" @click.prevent="triggerUpload">
+    <div
+      class="file-upload-container"
+      v-bind="$attrs"
+      @click.prevent="triggerUpload"
+    >
       <slot
         name="uploaded"
         :uploadedData="uploadedData"
@@ -27,7 +31,9 @@
 <script setup lang="ts">
 import axios from 'axios'
 import { PropType, ref, useTemplateRef } from 'vue'
-
+defineOptions({
+  inheritAttrs: false,
+})
 const { action, beforeUpload } = defineProps({
   action: {
     type: String,
@@ -51,6 +57,7 @@ const onFileChange = (e: Event) => {
     if (beforeUpload) {
       const result = beforeUpload(files[0])
       if (!result) {
+        target.value = ''
         return
       }
     }
