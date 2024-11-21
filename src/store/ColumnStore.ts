@@ -25,9 +25,9 @@ export const useColumnStore = defineStore('column', {
         })
         .catch(() => {})
     },
-    fetchColumns() {
+    fetchColumns(page: number, pageSize: number) {
       axios
-        .get('/columns')
+        .get(`/columns?currentPage=${page}&pageSize=${pageSize}`)
         .then((resp) => {
           this.columns = resp.data.data.list
         })

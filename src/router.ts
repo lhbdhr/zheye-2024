@@ -33,7 +33,7 @@ const routes = [
   },
   {
     path: '/create',
-    name: 'create',
+    name: 'createPost',
     component: CreatePost,
     meta: {
       requiredLogin: true,

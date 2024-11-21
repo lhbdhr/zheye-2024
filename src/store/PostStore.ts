@@ -39,9 +39,23 @@ export const usePostStore = defineStore('post', {
         })
         .catch(() => {})
     },
-    async fetchPostById(id: string) {
+    async fetchPostById(id: string): Promise<PostProps> {
       const { data } = await axios.get(`/posts/${id}`)
       this.posts = [data.data]
+      return data.data
+    },
+    async deletePostById(id: string) {
+      await axios.delete(`/posts/${id}`)
+      this.posts = this.posts.filter((post) => post._id !== id)
+    },
+    async patchPostById(id: string, payload: PostProps) {
+      const response = await axios.patch(`/posts/${id}`, payload)
+      const updatedPost = response.data
+      // 在 posts 数组中找到对应的 post，并更新其值
+      this.posts = this.posts.map((post) =>
+        post._id === id ? { ...post, ...updatedPost } : post
+      )
+      return id
     },
   },
 })

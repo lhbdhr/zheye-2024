@@ -4,18 +4,16 @@
       v-if="tag === 'input'"
       class="form-control"
       :class="{ 'is-invalid': inputRef.error }"
-      :value="inputRef.val"
       @blur="validateInput"
-      @input="updateValue"
+      v-model="inputRef.val"
       v-bind="$attrs"
     />
     <textarea
       v-else
       class="form-control"
       :class="{ 'is-invalid': inputRef.error }"
-      :value="inputRef.val"
       @blur="validateInput"
-      @input="updateValue"
+      v-model="inputRef.val"
       v-bind="$attrs"
     ></textarea>
     <span v-if="inputRef.error" class="invalid-feedback">{{
@@ -24,7 +22,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { PropType, reactive, onMounted } from 'vue'
+import { PropType, reactive, onMounted, computed } from 'vue'
 import emitter from '@/hooks/useMitt'
 
 // 禁用 attributes 继承
@@ -49,17 +47,17 @@ const props = defineProps({
     default: 'input',
   },
 })
+const emit = defineEmits(['update:modelValue'])
 const inputRef = reactive({
-  val: props.modelValue || '',
+  val: computed({
+    get: () => props.modelValue || '',
+    set: (val) => {
+      emit('update:modelValue', val)
+    },
+  }),
   error: false,
   message: '',
 })
-const emit = defineEmits(['update:modelValue'])
-const updateValue = (e: Event) => {
-  const targetValue = (e.target as HTMLInputElement).value
-  inputRef.val = targetValue
-  emit('update:modelValue', targetValue)
-}
 
 const validateInput = () => {
   if (props.rules) {

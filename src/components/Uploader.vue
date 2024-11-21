@@ -29,27 +29,40 @@
 </template>
 
 <script setup lang="ts">
+import { ImageProps } from '@/store/Utils'
 import axios from 'axios'
-import { PropType, ref, useTemplateRef } from 'vue'
+import { PropType, ref, useTemplateRef, watch } from 'vue'
 defineOptions({
   inheritAttrs: false,
 })
-const { action, beforeUpload } = defineProps({
+const { action, beforeUpload, uploaded } = defineProps({
   action: {
     type: String,
     required: true,
   },
   beforeUpload: Function as PropType<CheckFunction>,
+  uploaded: {
+    type: Object as PropType<ImageProps>,
+  },
 })
+watch(
+  () => uploaded,
+  (newValue) => {
+    if (newValue) {
+      fileStatus.value = 'success'
+      uploadedData.value = newValue
+    }
+  }
+)
 const emit = defineEmits(['file-uploaded', 'file-uploaded-error'])
 type UploadStatus = 'ready' | 'uploading' | 'success' | 'error'
 type CheckFunction = (file: File) => boolean
-const fileStatus = ref<UploadStatus>('ready')
+const fileStatus = ref<UploadStatus>(uploaded ? 'success' : 'ready')
 const fileInputRef = useTemplateRef('fileInput')
 const triggerUpload = () => {
   fileInputRef.value?.click()
 }
-const uploadedData = ref()
+const uploadedData = ref(uploaded)
 const onFileChange = (e: Event) => {
   const target = e.target as HTMLInputElement
   if (target.files) {
@@ -72,7 +85,7 @@ const onFileChange = (e: Event) => {
       })
       .then((resp) => {
         fileStatus.value = 'success'
-        uploadedData.value = resp.data
+        uploadedData.value = resp.data.data
         emit('file-uploaded', resp.data)
       })
       .catch((error) => {

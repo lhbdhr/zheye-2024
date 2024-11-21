@@ -6,6 +6,7 @@
       class="d-flex justify-content-center align-items-center bg-light text-secondary w-100 my-4"
       :beforeUpload="beforeUpload"
       @file-uploaded="onFileUploaded"
+      :uploaded="uploadedImage"
     >
       <h2>点击上传头图</h2>
       <template #uploading>
@@ -17,7 +18,7 @@
         </div>
       </template>
       <template #uploaded="slotProps">
-        <img :src="slotProps.uploadedData.data.url" />
+        <img :src="slotProps.uploadedData && slotProps.uploadedData.url" />
       </template>
     </uploader>
     <validate-form @form-submit="onFormSubmit">
@@ -51,7 +52,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import router from '@/router'
 import { usePostStore } from '@/store/PostStore'
@@ -62,16 +63,38 @@ import ValidateForm from '../components/ValidateForm.vue'
 import Uploader from '@/components/Uploader.vue'
 import { beforeUploadCheck } from '@/helper'
 import { ResponseType, ImageProps } from '@/store/Utils'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+const isEditMode = !!route.query.id
+const postStore = usePostStore()
 
 const titleVal = ref('')
+const contentVal = ref('')
+const uploadedImage = ref<ImageProps | undefined>(undefined)
 const titleRules: RuleProp[] = [
   { type: 'required', message: '文章标题不能为空' },
   { type: 'range', message: '文章标题最少6个字符', min: 6 },
 ]
-const contentVal = ref('')
 const contentRules: RuleProp[] = [
   { type: 'required', message: '文章详情不能为空' },
 ]
+
+// edit
+onMounted(async () => {
+  if (isEditMode) {
+    const currentId = route.query.id as string
+    const post = await postStore.fetchPostById(currentId)
+    if (post) {
+      titleVal.value = post.title
+      contentVal.value = post.content || ''
+      uploadedImage.value = post.image as ImageProps
+      console.log(titleVal.value, contentVal.value, uploadedImage.value)
+    }
+    // console.log('post', post)
+  }
+})
+console.log('route', route)
 
 //  upload
 const beforeUpload = (file: File) => {
@@ -97,22 +120,33 @@ const onFileUploaded = (rawData: ResponseType<ImageProps>) => {
   }
 }
 // createPost
-const postStore = usePostStore()
 const { info } = storeToRefs(useUserStore())
 const onFormSubmit = async (formResult: boolean) => {
   try {
     if (formResult) {
-      const id = await postStore.createPost({
+      let payload = {
         title: titleVal.value,
         content: contentVal.value,
         column: info?.value?.column || '',
         author: info?.value?._id || '',
-        image: uploadedId.value,
-      })
-      createMessage('success', '文章创建成功，2秒后跳转至文章', 2000)
-      setTimeout(() => {
-        router.push({ name: 'post', params: { id } })
-      }, 2000)
+        ...(uploadedId.value ? { image: uploadedId.value } : undefined),
+      }
+      if (isEditMode) {
+        const id = await postStore.patchPostById(
+          route.query.id as string,
+          payload
+        )
+        createMessage('success', '文章修改成功，2秒后跳转至文章', 2000)
+        setTimeout(() => {
+          router.push({ name: 'post', params: { id } })
+        }, 2000)
+      } else {
+        const id = await postStore.createPost(payload)
+        createMessage('success', '文章创建成功，2秒后跳转至文章', 2000)
+        setTimeout(() => {
+          router.push({ name: 'post', params: { id } })
+        }, 2000)
+      }
     }
   } catch (error) {}
 }

@@ -28,7 +28,7 @@ const { columns } = storeToRefs(columnStore)
 
 onMounted(() => {
   console.log('Home mounted')
-  columnStore.fetchColumns()
+  columnStore.fetchColumns(1, 6)
 })
 onUnmounted(() => {
   console.log('Home unmounted')
