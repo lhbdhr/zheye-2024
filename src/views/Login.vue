@@ -46,8 +46,8 @@ const passwordRules: RuleProp[] = [
 const onFormSubmit = async (formResult: boolean) => {
   if (formResult) {
     try {
-      await userStore.login(emailVal.value, passwordVal.value)
-      await userStore.fetchCurrentUser()
+      const token = await userStore.login(emailVal.value, passwordVal.value)
+      await userStore.fetchCurrentUser(token)
       createMessage('success', '登录成功, 2秒钟后将跳转至首页', 2000)
       setTimeout(() => {
         router.push({ name: 'home' })

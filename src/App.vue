@@ -23,7 +23,7 @@ import { useUserStore } from '@/store/UserStore'
 import { useGlobalStore } from './store/GlobalStore'
 import GlobalHeader from '@/components/GlobalHeader.vue'
 import Loading from './components/Loader.vue'
-import { onMounted, watch } from 'vue'
+import { watch } from 'vue'
 import createMessage from './components/createMessage'
 import { useRoute } from 'vue-router'
 const route = useRoute()
@@ -35,15 +35,6 @@ const { loading: isLoading, error } = storeToRefs(globalStore)
 watch(error, () => {
   if (error.value.status) {
     createMessage('error', error.value.message, 2000)
-  }
-})
-
-onMounted(() => {
-  const token = localStorage.getItem('token')
-  if (token && userStore.info == undefined) {
-    userStore.updateToken(token)
-    userStore.isLogin = true
-    userStore.fetchCurrentUser()
   }
 })
 </script>

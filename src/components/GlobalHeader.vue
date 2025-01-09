@@ -8,7 +8,7 @@
         >
       </li>
       <li class="list-inline-item">
-        <router-link to="/singup" class="btn btn-outline-light my-2"
+        <router-link to="/signup" class="btn btn-outline-light my-2"
           >注册</router-link
         >
       </li>
@@ -28,11 +28,22 @@
               >我的专栏</router-link
             ></dropdown-item
           >
+          <dropdown-item
+            ><router-link :to="{ name: 'login' }" class="dropdown-item"
+              >登陆</router-link
+            ></dropdown-item
+          >
+          <dropdown-item
+            ><router-link :to="{ name: 'signup' }" class="dropdown-item"
+              >注册</router-link
+            ></dropdown-item
+          >
           <dropdown-item disabled
             ><router-link :to="'/login'" class="dropdown-item"
               >编辑资料</router-link
             ></dropdown-item
           >
+
           <dropdown-item
             ><a href="#" @click="logoutHandler" class="dropdown-item"
               >退出登陆</a

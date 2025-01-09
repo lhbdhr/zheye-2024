@@ -9,20 +9,21 @@ const app = createApp(App)
 const pinia = createPinia()
 app.use(pinia)
 app.use(router)
+const icode = '5D356AE2F3F5D586'
 const globalStore = useGlobalStore()
 axios.defaults.baseURL = 'http://apis.imooc.com/api'
 axios.interceptors.request.use((config) => {
   globalStore.setError({ status: false })
   globalStore.setLoading(true)
   // get 请求，添加 icode 到 URL
-  config.params = { ...config.params, icode: 'DBE1B4E7AD5FC313' }
+  config.params = { ...config.params, icode: icode }
   // 其他请求 添加 icode 到 body 中
   // 如果是上传文件， 添加到 Formdata 中
   if (config.data instanceof FormData) {
-    config.data.append('icode', 'DBE1B4E7AD5FC313')
+    config.data.append('icode', icode)
   } else {
     // 普通 POST 请求，添加到 body 中
-    config.data = { ...config.data, icode: 'DBE1B4E7AD5FC313' }
+    config.data = { ...config.data, icode: icode }
   }
   return config
 })

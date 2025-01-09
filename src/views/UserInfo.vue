@@ -1,5 +1,5 @@
 <template>
-  <h4>新建文章</h4>
+  <h4>用户信息</h4>
   <div class="create-post-page">
     <uploader
       action="/upload"
@@ -94,6 +94,7 @@ onMounted(async () => {
     // console.log('post', post)
   }
 })
+console.log('route', route)
 
 //  upload
 const beforeUpload = (file: File) => {
