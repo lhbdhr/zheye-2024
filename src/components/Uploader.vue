@@ -29,12 +29,26 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * 上传组件
+ *
+ * @props
+ * @prop {String} action - url
+ * @prop {Function} beforeUpload - 上传前回调方法，用于检查选择的文件是否符合要求
+ * @prop {Object} uploaded - 已上传的文件
+ *
+ * @emits
+ * @emit {Function} file-uploaded - 发射文件上传成功事件
+ * @emit {Function} file-uploaded-error - 发射文件上传失败事件
+ *
+ */
 import { ImageProps } from '@/store/Utils'
 import axios from 'axios'
 import { PropType, ref, useTemplateRef, watch } from 'vue'
 defineOptions({
   inheritAttrs: false,
 })
+// 上传URL 上传前回调函数 已选择的文件
 const { action, beforeUpload, uploaded } = defineProps({
   action: {
     type: String,
@@ -45,6 +59,9 @@ const { action, beforeUpload, uploaded } = defineProps({
     type: Object as PropType<ImageProps>,
   },
 })
+// 将props中的uploaded转换为响应式数据，并通过具名作用域插槽 slotprops 传给父组件
+const uploadedData = ref(uploaded)
+// uploadedData 只有在初始化时被赋值了一次，需要监听 uploaded 变化，赋值给 uploadedData
 watch(
   () => uploaded,
   (newValue) => {
@@ -57,12 +74,15 @@ watch(
 const emit = defineEmits(['file-uploaded', 'file-uploaded-error'])
 type UploadStatus = 'ready' | 'uploading' | 'success' | 'error'
 type CheckFunction = (file: File) => boolean
+// 当前上传状态
 const fileStatus = ref<UploadStatus>(uploaded ? 'success' : 'ready')
+// 获取真实上传控件input的dom
 const fileInputRef = useTemplateRef('fileInput')
+// 触发input的点击事件
 const triggerUpload = () => {
   fileInputRef.value?.click()
 }
-const uploadedData = ref(uploaded)
+// 处理上传文件改变
 const onFileChange = (e: Event) => {
   const target = e.target as HTMLInputElement
   if (target.files) {

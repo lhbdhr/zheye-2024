@@ -29,6 +29,7 @@
           type="text"
           id="email"
           name="email"
+          disabled
           placeholder="请输入电子邮件"
           v-model="infoData.email"
           :rules="rules.email"
@@ -131,7 +132,7 @@ const onFormSubmit = async (formResult: boolean) => {
     })
     if (formResult) {
       await userStore.updateCurrentUser(payload)
-      createMessage('success', '文章修改成功，2秒后跳转至文章', 2000)
+      createMessage('success', '个人资料修改成功', 2000)
       setTimeout(() => {
         router.push({
           name: 'user',
