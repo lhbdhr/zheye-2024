@@ -104,10 +104,10 @@ const beforeUpload = (file: File) => {
   })
   switch (error) {
     case 'validType':
-      createMessage('error', '允许上传文件类型：jpg、jpeg、png')
+      createMessage('error', '允许上传文件类型：jpg、jpeg、png', 2000)
       break
     case 'validSize':
-      createMessage('error', '允许上传文件大小：1M以内')
+      createMessage('error', '允许上传文件大小：1M以内', 2000)
       break
   }
   return passed

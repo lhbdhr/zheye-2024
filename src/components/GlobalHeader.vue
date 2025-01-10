@@ -38,12 +38,13 @@
               >注册</router-link
             ></dropdown-item
           >
-          <dropdown-item disabled
-            ><router-link :to="'/login'" class="dropdown-item"
-              >编辑资料</router-link
+          <dropdown-item
+            ><router-link
+              :to="{ name: 'user', params: { id: user._id } }"
+              class="dropdown-item"
+              >个人资料</router-link
             ></dropdown-item
           >
-
           <dropdown-item
             ><a href="#" @click="logoutHandler" class="dropdown-item"
               >退出登陆</a

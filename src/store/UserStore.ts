@@ -6,7 +6,7 @@ export interface UserDataProps {
   _id?: string
   column?: string
   email?: string
-  avatar?: ImageProps
+  avatar?: ImageProps | string
   description?: string
 }
 export interface UserProps {
@@ -59,6 +59,13 @@ export const useUserStore = defineStore('user', {
     async register(email: string, password: string, nickName: string) {
       const payload = { email, password, nickName }
       await axios.post<ResponseType>('/users', payload)
+    },
+    async updateCurrentUser(payload: UserDataProps) {
+      const { data } = await axios.patch<ResponseType>(
+        `/user/${payload._id}`,
+        payload
+      )
+      this.info = data.data
     },
     logout() {
       this.token = undefined

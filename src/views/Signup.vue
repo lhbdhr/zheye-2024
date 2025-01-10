@@ -59,7 +59,7 @@ const formData = reactive({
   password: '',
   repeatPassword: '',
 })
-const rules = reactive<{ [key: string]: RuleProp[] }>({
+const rules: Record<string, RuleProp[]> = reactive({
   emailRules: [
     { type: 'required', message: '电子邮箱地址不能为空' },
     { type: 'email', message: '请输入正确的电子邮箱格式' },

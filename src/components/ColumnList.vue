@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-4 mb-4" v-for="column in columnList" :key="column._id">
-      <div class="card h-100 shadow-sm" style="width: 18rem">
+      <div class="card h-100 shadow-sm">
         <div class="card-body text-center">
           <img
             class="rounded-circle border border-light my-3"
@@ -41,5 +41,13 @@ const columnList = computed(() => props.list)
 .card-body img {
   width: 50px;
   height: 50px;
+}
+.description {
+  line-height: 20px;
+  height: 60px;
+  line-clamp: 2;
+  word-break: break-all;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 </style>

@@ -6,6 +6,7 @@ import ColumnDetail from './views/ColumnDetail.vue'
 import PostDetail from './views/PostDetail.vue'
 import CreatePost from './views/CreatePost.vue'
 import Signup from './views/Signup.vue'
+import UserInfo from './views/UserInfo.vue'
 import { useUserStore } from './store/UserStore'
 import { storeToRefs } from 'pinia'
 import createMessage from './components/createMessage'
@@ -44,6 +45,11 @@ const routes = [
     path: '/column/:id',
     name: 'column',
     component: ColumnDetail,
+  },
+  {
+    path: '/user/:id',
+    name: 'user',
+    component: UserInfo,
   },
   {
     path: '/post/:id',

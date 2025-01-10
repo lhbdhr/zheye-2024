@@ -1,14 +1,15 @@
 <template>
-  <h4>用户信息</h4>
-  <div class="create-post-page">
+  <h4>个人资料</h4>
+  <div class="edit-info-page">
     <uploader
       action="/upload"
-      class="d-flex justify-content-center align-items-center bg-light text-secondary w-100 my-4"
+      class="d-flex justify-content-center align-items-center bg-light text-secondary my-4 mx-auto"
+      style="height: 200px; width: 200px"
       :beforeUpload="beforeUpload"
       @file-uploaded="onFileUploaded"
       :uploaded="uploadedImage"
     >
-      <h2>点击上传头图</h2>
+      <h2 class="fs-5">点击上传头像</h2>
       <template #uploading>
         <div class="d-flex align-items-center">
           <div class="spinner-border text-primary" role="status">
@@ -23,80 +24,80 @@
     </uploader>
     <validate-form @form-submit="onFormSubmit">
       <div class="mb-3">
-        <label for="title" class="form-label">文章标题：</label>
+        <label for="email" class="form-label">电子邮件：</label>
         <base-input
           type="text"
-          id="title"
-          name="title"
-          v-model="titleVal"
-          placeholder="请输入文章标题"
-          :rules="titleRules"
+          id="email"
+          name="email"
+          placeholder="请输入电子邮件"
+          v-model="infoData.email"
+          :rules="rules.email"
+        >
+          ></base-input
+        >
+      </div>
+      <div class="mb-3">
+        <label for="nickName" class="form-label">昵称：</label>
+        <base-input
+          id="nickName"
+          name="nickName"
+          type="text"
+          v-model="infoData.nickName"
+          placeholder="请输入昵称"
+          :rules="rules.nickName"
         ></base-input>
       </div>
       <div class="mb-3">
-        <label for="content" class="form-label">文章详情：</label>
+        <label for="description" class="form-label">描述：</label>
         <base-input
-          :tag="'textarea'"
-          rows="10"
-          id="content"
-          name="content"
-          v-model="contentVal"
-          placeholder="请输入文章详情"
-          :rules="contentRules"
+          id="description"
+          name="description"
+          type="text"
+          v-model="infoData.description"
+          placeholder="请输入个人描述"
+          :rules="rules.description"
         ></base-input>
       </div>
       <template #submit>
-        <button class="btn btn-primary">发表文章</button>
+        <button class="btn btn-primary">更新个人资料</button>
       </template>
     </validate-form>
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { storeToRefs } from 'pinia'
-import router from '@/router'
-import { usePostStore } from '@/store/PostStore'
-import { useUserStore } from '@/store/UserStore'
-import createMessage from '@/components/createMessage'
-import BaseInput, { RuleProp } from '@/components/BaseInput.vue'
+import { onMounted, reactive, ref } from 'vue'
+import Uploader from '../components/Uploader.vue'
 import ValidateForm from '../components/ValidateForm.vue'
-import Uploader from '@/components/Uploader.vue'
+import BaseInput, { RuleProp } from '../components/BaseInput.vue'
+import { useUserStore, UserDataProps } from '@/store/UserStore'
+import { ImageProps } from '@/store/Utils'
+import createMessage from '../components/createMessage'
 import { beforeUploadCheck } from '@/helper'
-import { ResponseType, ImageProps } from '@/store/Utils'
-import { useRoute } from 'vue-router'
+import { ResponseType } from '@/store/Utils'
+import router from '@/router'
 
-const route = useRoute()
-const isEditMode = !!route.query.id
-const postStore = usePostStore()
-
-const titleVal = ref('')
-const contentVal = ref('')
+const userStore = useUserStore()
 const uploadedImage = ref<ImageProps | undefined>(undefined)
-const titleRules: RuleProp[] = [
-  { type: 'required', message: '文章标题不能为空' },
-  { type: 'range', message: '文章标题最少6个字符', min: 6 },
-]
-const contentRules: RuleProp[] = [
-  { type: 'required', message: '文章详情不能为空' },
-]
-
-// edit
-onMounted(async () => {
-  if (isEditMode) {
-    const currentId = route.query.id as string
-    const post = await postStore.fetchPostById(currentId)
-    if (post) {
-      titleVal.value = post.title
-      contentVal.value = post.content || ''
-      uploadedImage.value = post.image as ImageProps
-      console.log(titleVal.value, contentVal.value, uploadedImage.value)
-    }
-    // console.log('post', post)
-  }
+const infoData = reactive({
+  email: userStore.info?.email,
+  nickName: userStore.info?.nickName,
+  description: userStore.info?.description,
 })
-console.log('route', route)
+onMounted(() => {
+  uploadedImage.value = userStore.info?.avatar as ImageProps
+})
 
-//  upload
+const rules: Record<string, RuleProp[]> = {
+  email: [
+    { type: 'required', message: '电子邮件不能为空' },
+    { type: 'email', message: '请输入正确的电子邮箱' },
+  ],
+  nickName: [
+    { type: 'required', message: '昵称不能为空' },
+    { type: 'range', max: 16, message: '昵称长度最长为16' },
+  ],
+  description: [{ type: 'required', message: '个人简介不能为空' }],
+}
 const beforeUpload = (file: File) => {
   const types = ['image/jpeg', 'image/png']
   const { passed, error } = beforeUploadCheck(file, {
@@ -105,10 +106,10 @@ const beforeUpload = (file: File) => {
   })
   switch (error) {
     case 'validType':
-      createMessage('error', '允许上传文件类型：jpg、jpeg、png')
+      createMessage('error', '允许上传文件类型：jpg、jpeg、png', 2000)
       break
     case 'validSize':
-      createMessage('error', '允许上传文件大小：1M以内')
+      createMessage('error', '允许上传文件大小：1M以内', 2000)
       break
   }
   return passed
@@ -119,45 +120,36 @@ const onFileUploaded = (rawData: ResponseType<ImageProps>) => {
     uploadedId.value = rawData.data._id
   }
 }
-// createPost
-const { info } = storeToRefs(useUserStore())
+
 const onFormSubmit = async (formResult: boolean) => {
   try {
+    const payload: UserDataProps = reactive({
+      _id: userStore.info?._id,
+      column: userStore.info?.column,
+      ...infoData,
+      ...(uploadedId.value ? { avatar: uploadedId.value } : undefined),
+    })
     if (formResult) {
-      let payload = {
-        title: titleVal.value,
-        content: contentVal.value,
-        column: info?.value?.column || '',
-        author: info?.value?._id || '',
-        ...(uploadedId.value ? { image: uploadedId.value } : undefined),
-      }
-      if (isEditMode) {
-        const id = await postStore.patchPostById(
-          route.query.id as string,
-          payload
-        )
-        createMessage('success', '文章修改成功，2秒后跳转至文章', 2000)
-        setTimeout(() => {
-          router.push({ name: 'post', params: { id } })
-        }, 2000)
-      } else {
-        const id = await postStore.createPost(payload)
-        createMessage('success', '文章创建成功，2秒后跳转至文章', 2000)
-        setTimeout(() => {
-          router.push({ name: 'post', params: { id } })
-        }, 2000)
-      }
+      await userStore.updateCurrentUser(payload)
+      createMessage('success', '文章修改成功，2秒后跳转至文章', 2000)
+      setTimeout(() => {
+        router.push({
+          name: 'user',
+          params: { id: userStore.info?._id },
+          query: { now: new Date().getTime() },
+        })
+      }, 2000)
     }
   } catch (error) {}
 }
 </script>
 
 <style>
-.create-post-page .file-upload-container {
+.edit-info-page .file-upload-container {
   height: 200px;
   cursor: pointer;
 }
-.create-post-page .file-upload-container img {
+.edit-info-page .file-upload-container img {
   width: 100%;
   height: 100%;
   object-fit: cover;
