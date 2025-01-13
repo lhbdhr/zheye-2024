@@ -11,6 +11,7 @@
   "dependencies": {
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
+    "easymde": "^2.18.0",
     "marked": "^15.0.1",
     "mitt": "^3.0.1",
     "pinia": "^2.2.6",

@@ -34,16 +34,18 @@
         ></base-input>
       </div>
       <div class="mb-3">
-        <label for="content" class="form-label">文章详情：</label>
-        <base-input
-          :tag="'textarea'"
-          rows="10"
-          id="content"
-          name="content"
+        <label class="form-label">文章详情：</label>
+        <editor
           v-model="contentVal"
-          placeholder="请输入文章详情"
-          :rules="contentRules"
-        ></base-input>
+          ref="editorRef"
+          :options="editorConfig"
+          @blur="onEditorBlur"
+          @change="onEditorChange"
+          :class="{ 'is-invalid': !editorStatus.isValid }"
+        ></editor>
+        <span v-if="!editorStatus.isValid" class="invalid-feedback">{{
+          editorStatus.msg
+        }}</span>
       </div>
       <template #submit>
         <button class="btn btn-primary">发表文章</button>
@@ -52,7 +54,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, reactive, ref, useTemplateRef } from 'vue'
 import { storeToRefs } from 'pinia'
 import router from '@/router'
 import { usePostStore } from '@/store/PostStore'
@@ -64,6 +66,8 @@ import Uploader from '@/components/Uploader.vue'
 import { beforeUploadCheck } from '@/helper'
 import { ResponseType, ImageProps } from '@/store/Utils'
 import { useRoute } from 'vue-router'
+import Editor from '@/components/Editor.vue'
+import EasyMDE, { Options } from 'easymde'
 
 const route = useRoute()
 const isEditMode = !!route.query.id
@@ -76,12 +80,12 @@ const titleRules: RuleProp[] = [
   { type: 'required', message: '文章标题不能为空' },
   { type: 'range', message: '文章标题最少6个字符', min: 6 },
 ]
-const contentRules: RuleProp[] = [
-  { type: 'required', message: '文章详情不能为空' },
-]
 
 // edit
 onMounted(async () => {
+  if (editorRef.value) {
+    // console.log('Editor Instance', editorRef.value.getEasyMDEInstance())
+  }
   if (isEditMode) {
     const currentId = route.query.id as string
     const post = await postStore.fetchPostById(currentId)
@@ -89,11 +93,40 @@ onMounted(async () => {
       titleVal.value = post.title
       contentVal.value = post.content || ''
       uploadedImage.value = post.image as ImageProps
-      console.log(titleVal.value, contentVal.value, uploadedImage.value)
+      // console.log(titleVal.value, contentVal.value, uploadedImage.value)
     }
     // console.log('post', post)
   }
 })
+
+// markdown editor
+interface EditorInstance {
+  clear: () => void
+  getEasyMDEInstance: () => EasyMDE | null
+}
+
+const editorRef = useTemplateRef<EditorInstance>('editorRef')
+const editorConfig: Options = {
+  spellChecker: false,
+}
+
+const editorStatus = reactive({
+  isValid: true,
+  msg: '',
+})
+
+const onEditorBlur = () => {
+  if (contentVal.value.trim() === '') {
+    editorStatus.isValid = false
+    editorStatus.msg = '文章详情不能为空'
+  } else {
+    editorStatus.isValid = true
+    editorStatus.msg = ''
+  }
+}
+const onEditorChange = (_value: string) => {
+  onEditorBlur()
+}
 
 //  upload
 const beforeUpload = (file: File) => {
@@ -122,7 +155,8 @@ const onFileUploaded = (rawData: ResponseType<ImageProps>) => {
 const { info } = storeToRefs(useUserStore())
 const onFormSubmit = async (formResult: boolean) => {
   try {
-    if (formResult) {
+    onEditorBlur()
+    if (formResult && editorStatus.isValid) {
       let payload = {
         title: titleVal.value,
         content: contentVal.value,

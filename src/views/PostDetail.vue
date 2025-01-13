@@ -77,7 +77,7 @@ const imageURL = computed(() => useImageURL(post?.value?.image, 'origin'))
 const currentHTML = computed(() => {
   if (post.value && post.value.content) {
     const { isHTML, content } = post.value
-    return isHTML ? content : marked.parse(content)
+    return isHTML ? content : marked.parse(content, { breaks: true })
   } else {
     return ''
   }

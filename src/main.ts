@@ -4,6 +4,7 @@ import axios from 'axios'
 import App from './App.vue'
 import router from '@/router'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import 'easymde/dist/easymde.min.css'
 import { useGlobalStore } from './store/GlobalStore'
 const app = createApp(App)
 const pinia = createPinia()
