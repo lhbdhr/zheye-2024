@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { ImageProps } from './Utils'
 import { UserDataProps } from './UserStore'
+import { ListProps } from './Utils'
+import { arrToObj, objToArr } from '@/helper'
 import axios from 'axios'
 export interface PostProps {
   _id?: string
@@ -16,45 +18,39 @@ export interface PostProps {
 
 export const usePostStore = defineStore('post', {
   state: () => ({
-    posts: [] as PostProps[],
+    posts: {} as ListProps<PostProps>,
   }),
   getters: {
-    getPostsByCid: (state) => {
-      return (cid: string) => state.posts.filter((post) => post.column === cid)
-    },
-    getpostById(state) {
-      return (id: string) => state.posts.find((post) => post._id === id)
-    },
+    getPostsByCid: (state) => (cid: string) =>
+      objToArr(state.posts).filter((post) => post.column === cid),
+    getpostById: (state) => (id: string) => state.posts[id],
   },
   actions: {
     async createPost(post: PostProps): Promise<string> {
       const { data } = await axios.post('/posts', post)
+      this.posts[data.data._id] = data.data
       return data.data._id
     },
     async fetchPostsByCid(cid: string) {
-      axios
-        .get(`/columns/${cid}/posts`)
-        .then((resp) => {
-          this.posts = resp.data.data.list
-        })
-        .catch(() => {})
+      const { data } = await axios.get(`/columns/${cid}/posts`)
+      // console.log('fetchPostsByCid', data.data.list)
+      Object.assign(this.posts, arrToObj(data.data.list))
     },
     async fetchPostById(id: string): Promise<PostProps> {
       const { data } = await axios.get(`/posts/${id}`)
-      this.posts = [data.data]
+      // console.log('fetchPostById', data.data)
+      this.posts[data.data._id] = data.data
       return data.data
     },
     async deletePostById(id: string) {
       await axios.delete(`/posts/${id}`)
-      this.posts = this.posts.filter((post) => post._id !== id)
+      delete this.posts[id]
     },
     async patchPostById(id: string, payload: PostProps) {
-      const response = await axios.patch(`/posts/${id}`, payload)
-      const updatedPost = response.data
+      const { data } = await axios.patch(`/posts/${id}`, payload)
+      // console.log('patchPostById', data)
       // 在 posts 数组中找到对应的 post，并更新其值
-      this.posts = this.posts.map((post) =>
-        post._id === id ? { ...post, ...updatedPost } : post
-      )
+      this.posts[id] = data.data
       return id
     },
   },

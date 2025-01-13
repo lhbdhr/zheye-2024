@@ -86,10 +86,13 @@ router.beforeEach(async (to, _from, next) => {
   } else {
     if (to.meta.redirectAlreadyLogin && isLogin.value && info?.value) {
       createMessage('error', '您已经登录啦，跳转至首页...', 2000)
+      console.log('router link 处理逻辑')
       next({ name: 'home' })
     } else if (to.meta.requiredLogin && !isLogin.value) {
+      console.log('router link 处理逻辑')
       next({ name: 'login' })
     } else {
+      console.log('router link 处理逻辑')
       next()
     }
   }

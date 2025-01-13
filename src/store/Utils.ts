@@ -9,3 +9,6 @@ export interface ResponseType<P = Record<string, never>> {
   data: P
   msg: string
 }
+export interface ListProps<T> {
+  [id: string]: T
+}

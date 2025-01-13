@@ -20,7 +20,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, computed, onUnmounted } from 'vue'
+import { onMounted, computed } from 'vue'
 import PostList from '@/components/PostList.vue'
 import { useRoute } from 'vue-router'
 import { useColumnStore } from '@/store/ColumnStore'
@@ -29,16 +29,13 @@ import useImageURL from '@/hooks/useImageURL'
 const route = useRoute()
 const currentId = route.params.id as string
 const columnStore = useColumnStore()
-const PostStore = usePostStore()
+const postStore = usePostStore()
 const column = computed(() => columnStore.getColumnById(currentId))
-const posts = computed(() => PostStore.getPostsByCid(currentId))
+const posts = computed(() => postStore.getPostsByCid(currentId))
 
 onMounted(() => {
-  console.log('ColumnDetail mounted')
+  // console.log('ColumnDetail mounted')
   columnStore.fetchColumnById(currentId)
-  PostStore.fetchPostsByCid(currentId)
-})
-onUnmounted(() => {
-  console.log('ColumnDetail unmounted')
+  postStore.fetchPostsByCid(currentId)
 })
 </script>

@@ -45,7 +45,9 @@ export const useUserStore = defineStore('user', {
     async fetchCurrentUser(token: string) {
       this.updateToken(token)
       try {
-        const { data } = await axios.get<ResponseType>('/user/current')
+        const { data } = await axios.get<ResponseType<UserDataProps>>(
+          '/user/current'
+        )
         if (data.code === 0) {
           this.info = data.data
           this.isLogin = true

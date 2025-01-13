@@ -19,18 +19,13 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import ColumnList from '../components/ColumnList.vue'
-import { storeToRefs } from 'pinia'
 import { useColumnStore } from '@/store/ColumnStore'
 const columnStore = useColumnStore()
-const { columns } = storeToRefs(columnStore)
+const columns = computed(() => columnStore.getColumns())
 
 onMounted(() => {
-  console.log('Home mounted')
   columnStore.fetchColumns(1, 6)
-})
-onUnmounted(() => {
-  console.log('Home unmounted')
 })
 </script>
