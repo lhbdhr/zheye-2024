@@ -1,4 +1,15 @@
 <template>
+  <modal
+    title="删除文章"
+    :visible="modalIsShow"
+    primary-button-text="删除"
+    primary-button-type="btn-danger"
+    second-button-text="取消"
+    @modal-on-close="modalIsShow = false"
+    @modal-on-confirm="hideAnddeletePost"
+  >
+    <p>确定要删除这篇文章吗？</p>
+  </modal>
   <article class="w-75 mx-auto mb-5 pb-3" v-if="post">
     <div class="image-container my-4">
       <img
@@ -31,7 +42,11 @@
       >
         编辑
       </router-link>
-      <button type="button" class="btn btn-danger mx-2" @click="deletePost">
+      <button
+        type="button"
+        class="btn btn-danger mx-2"
+        @click.prevent="modalIsShow = true"
+      >
         删除
       </button>
     </div>
@@ -43,12 +58,15 @@ import { useRoute } from 'vue-router'
 import { usePostStore } from '@/store/PostStore'
 import UserProfile from '@/components/UserProfile.vue'
 import useImageURL from '@/hooks/useImageURL'
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { marked } from 'marked'
 import { UserDataProps, useUserStore } from '@/store/UserStore'
 import { storeToRefs } from 'pinia'
 import router from '@/router'
 import createMessage from '@/components/createMessage'
+import Modal from '@/components/Modal.vue'
+
+const modalIsShow = ref(false)
 const route = useRoute()
 const postStore = usePostStore()
 const { info } = storeToRefs(useUserStore())
@@ -69,7 +87,8 @@ const showEditArea = computed(() => {
   const postAuthor = post.value?.author as UserDataProps
   return info?.value?._id === postAuthor._id
 })
-const deletePost = () => {
+const hideAnddeletePost = () => {
+  modalIsShow.value = false
   try {
     postStore.deletePostById(currentId)
     createMessage('success', '文章删除成功', 2000)
