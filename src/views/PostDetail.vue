@@ -72,6 +72,7 @@ const postStore = usePostStore()
 const { info } = storeToRefs(useUserStore())
 const currentId = route.params.id as string
 const post = computed(() => postStore.getpostById(currentId))
+console.log('post', post)
 const imageURL = computed(() => useImageURL(post?.value?.image, 'origin'))
 
 const currentHTML = computed(() => {

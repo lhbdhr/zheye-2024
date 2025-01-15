@@ -66,35 +66,15 @@ const router = createRouter({
 router.beforeEach(async (to, _from, next) => {
   const userStore = useUserStore()
   const { isLogin, info } = storeToRefs(userStore)
-  const token = localStorage.getItem('token')
-  // 刷新/输入URL 处理逻辑
-  if (token && !info?.value) {
-    await userStore.fetchCurrentUser(token)
-    if (to.meta.redirectAlreadyLogin && isLogin.value && info?.value) {
-      createMessage('error', '您已经登录啦，跳转至首页...', 2000)
-      console.log('刷新/输入url 处理逻辑')
-      next({ name: 'home' })
-    } else if (to.meta.requiredLogin && !isLogin.value) {
-      console.log('刷新/输入url 处理逻辑')
-
-      next({ name: 'login' })
-    } else {
-      console.log('刷新/输入url 处理逻辑')
-      next()
-    }
-    // router-link 处理逻辑
+  await userStore.fetchCurrentUser()
+  if (to.meta.redirectAlreadyLogin && isLogin.value && info?.value) {
+    createMessage('error', '您已经登录啦，跳转至首页...', 2000)
+    next({ name: 'home' })
+  } else if (to.meta.requiredLogin && !isLogin.value) {
+    createMessage('error', '您必须登录才能访问此页面，跳转至登陆页...', 2000)
+    next({ name: 'login' })
   } else {
-    if (to.meta.redirectAlreadyLogin && isLogin.value && info?.value) {
-      createMessage('error', '您已经登录啦，跳转至首页...', 2000)
-      console.log('router link 处理逻辑')
-      next({ name: 'home' })
-    } else if (to.meta.requiredLogin && !isLogin.value) {
-      console.log('router link 处理逻辑')
-      next({ name: 'login' })
-    } else {
-      console.log('router link 处理逻辑')
-      next()
-    }
+    next()
   }
 })
 export default router

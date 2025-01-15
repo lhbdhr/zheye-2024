@@ -24,18 +24,16 @@ import { onMounted, computed } from 'vue'
 import PostList from '@/components/PostList.vue'
 import { useRoute } from 'vue-router'
 import { useColumnStore } from '@/store/ColumnStore'
-import { usePostStore } from '@/store/PostStore'
 import useImageURL from '@/hooks/useImageURL'
 const route = useRoute()
 const currentId = route.params.id as string
 const columnStore = useColumnStore()
-const postStore = usePostStore()
 const column = computed(() => columnStore.getColumnById(currentId))
-const posts = computed(() => postStore.getPostsByCid(currentId))
+const posts = computed(() => columnStore.getPostsByCid(currentId))
 
 onMounted(() => {
   // console.log('ColumnDetail mounted')
   columnStore.fetchColumnById(currentId)
-  postStore.fetchPostsByCid(currentId)
+  columnStore.fetchPostsByCid(currentId)
 })
 </script>

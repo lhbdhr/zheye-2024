@@ -22,7 +22,7 @@
       </template>
     </uploader>
     <validate-form @form-submit="onFormSubmit">
-      <div class="mb-3">
+      <div class="mb-5">
         <label for="title" class="form-label">文章标题：</label>
         <base-input
           type="text"
@@ -33,7 +33,7 @@
           :rules="titleRules"
         ></base-input>
       </div>
-      <div class="mb-3">
+      <div class="mb-5">
         <label class="form-label">文章详情：</label>
         <editor
           v-model="contentVal"
@@ -88,7 +88,8 @@ onMounted(async () => {
   }
   if (isEditMode) {
     const currentId = route.query.id as string
-    const post = await postStore.fetchPostById(currentId)
+    await postStore.fetchPostById(currentId)
+    const post = postStore.getpostById(currentId)
     if (post) {
       titleVal.value = post.title
       contentVal.value = post.content || ''

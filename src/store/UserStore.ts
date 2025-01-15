@@ -13,6 +13,7 @@ export interface UserProps {
   isLogin: boolean
   token?: string
   info?: UserDataProps
+  isInfoFetched: boolean
 }
 
 export const useUserStore = defineStore('user', {
@@ -21,13 +22,21 @@ export const useUserStore = defineStore('user', {
       isLogin: false,
       token: localStorage.getItem('token') || undefined,
       info: undefined,
+      isInfoFetched: false,
     }
   },
   actions: {
-    updateToken(token: string) {
-      this.token = token
-      localStorage.setItem('token', token)
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    updateToken(token?: string) {
+      if (token) {
+        this.token = token
+        localStorage.setItem('token', token)
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+      } else {
+        const token = localStorage.getItem('token')
+        if (!token) return
+        this.token = token
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+      }
     },
     async login(email: string, password: string): Promise<string> {
       try {
@@ -42,8 +51,10 @@ export const useUserStore = defineStore('user', {
         return ''
       }
     },
-    async fetchCurrentUser(token: string) {
-      this.updateToken(token)
+    async fetchCurrentUser() {
+      this.updateToken()
+      if (this.isInfoFetched) return
+      if (!this.token) return
       try {
         const { data } = await axios.get<ResponseType<UserDataProps>>(
           '/user/current'
@@ -51,6 +62,7 @@ export const useUserStore = defineStore('user', {
         if (data.code === 0) {
           this.info = data.data
           this.isLogin = true
+          this.isInfoFetched = true
         } else {
           this.logout()
         }
@@ -73,6 +85,7 @@ export const useUserStore = defineStore('user', {
       this.token = undefined
       this.isLogin = false
       this.info = undefined
+      this.isInfoFetched = false
       localStorage.removeItem('token')
       delete axios.defaults.headers.common['Authorization']
     },
