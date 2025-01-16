@@ -1,10 +1,12 @@
 import { defineStore } from 'pinia'
-import { ImageProps, ListProps } from './Utils'
+import { ImageProps, ListProps, ListResType } from './Utils'
 import { arrToObj, objToArr } from '@/helper'
+import { ListReqType } from './Utils'
 import axios from 'axios'
 
 interface Columns {
-  isloaded: boolean
+  total: number
+  currentPage: number
   columns: ListProps<ColumnProps>
 }
 export interface ColumnProps {
@@ -16,7 +18,8 @@ export interface ColumnProps {
 export const useColumnStore = defineStore('column', {
   state: (): Columns => ({
     columns: {},
-    isloaded: false,
+    total: 0,
+    currentPage: 0,
   }),
   getters: {
     getColumnById: (state) => (id: string) => state.columns[id],
@@ -28,13 +31,19 @@ export const useColumnStore = defineStore('column', {
       const { data } = await axios.get(`/columns/${id}`)
       this.columns[id] = data.data
     },
-    async fetchColumns(page: number, pageSize: number) {
-      if (this.isloaded) return
-      const { data } = await axios.get(
-        `/columns?currentPage=${page}&pageSize=${pageSize}`
-      )
-      Object.assign(this.columns, arrToObj(data.data.list))
-      this.isloaded = true
+    async fetchColumns(params: ListReqType = {}) {
+      const { currentPage = 1, pageSize = 3 } = params
+      if (this.currentPage < currentPage) {
+        const { data } = await axios.get<ListResType<ColumnProps>>(
+          `/columns?currentPage=${currentPage}&pageSize=${pageSize}`
+        )
+        const { count, list } = data.data
+        this.$patch({
+          currentPage,
+          total: count,
+          columns: Object.assign(this.columns, arrToObj(list)),
+        })
+      }
     },
   },
 })

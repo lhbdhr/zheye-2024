@@ -11,7 +11,10 @@
       <h2>点击上传头图</h2>
       <template #uploading>
         <div class="d-flex align-items-center">
-          <div class="spinner-border text-primary" role="status">
+          <div
+            class="spinner-border text-primary"
+            role="status"
+          >
             <span class="visually-hidden">Loading...</span>
           </div>
           <h6 class="text-primary ms-3 mb-0 fs-4">正在上传...</h6>
@@ -23,7 +26,12 @@
     </uploader>
     <validate-form @form-submit="onFormSubmit">
       <div class="mb-5">
-        <label for="title" class="form-label">文章标题：</label>
+        <label
+          for="title"
+          class="form-label"
+        >
+          文章标题：
+        </label>
         <base-input
           type="text"
           id="title"
@@ -43,9 +51,12 @@
           @change="onEditorChange"
           :class="{ 'is-invalid': !editorStatus.isValid }"
         ></editor>
-        <span v-if="!editorStatus.isValid" class="invalid-feedback">{{
-          editorStatus.msg
-        }}</span>
+        <span
+          v-if="!editorStatus.isValid"
+          class="invalid-feedback"
+        >
+          {{ editorStatus.msg }}
+        </span>
       </div>
       <template #submit>
         <button class="btn btn-primary">发表文章</button>

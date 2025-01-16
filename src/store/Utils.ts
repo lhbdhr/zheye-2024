@@ -12,3 +12,17 @@ export interface ResponseType<P = Record<string, never>> {
 export interface ListProps<T> {
   [id: string]: T
 }
+
+export interface ListResponse<P> {
+  list: P[]
+  count: number
+  currentPage: number
+  pageSize: number
+}
+
+export interface ListReqType {
+  currentPage?: number
+  pageSize?: number
+  cid?: string
+}
+export type ListResType<P = any> = ResponseType<ListResponse<P>>
