@@ -38,18 +38,13 @@ export const useUserStore = defineStore('user', {
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
       }
     },
-    async login(email: string, password: string): Promise<string> {
-      try {
-        const { data } = await axios.post<ResponseType>('/user/login', {
-          email,
-          password,
-        })
-        this.updateToken(data.data.token)
-        this.isLogin = true
-        return data.data.token
-      } catch {
-        return ''
-      }
+    async login(email: string, password: string) {
+      const { data } = await axios.post<ResponseType>('/user/login', {
+        email,
+        password,
+      })
+      this.updateToken(data.data.token)
+      this.isLogin = true
     },
     async fetchCurrentUser() {
       this.updateToken()

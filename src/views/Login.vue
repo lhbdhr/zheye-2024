@@ -1,7 +1,12 @@
 <template>
   <validate-form @form-submit="onFormSubmit">
     <div class="mb-3">
-      <label for="email" class="form-label">邮箱地址</label>
+      <label
+        for="email"
+        class="form-label"
+      >
+        邮箱地址
+      </label>
       <base-input
         type="text"
         id="email"
@@ -12,7 +17,12 @@
       ></base-input>
     </div>
     <div class="mb-3">
-      <label for="password" class="form-label">密码</label>
+      <label
+        for="password"
+        class="form-label"
+      >
+        密码
+      </label>
       <base-input
         type="password"
         id="password"
@@ -46,8 +56,8 @@ const passwordRules: RuleProp[] = [
 const onFormSubmit = async (formResult: boolean) => {
   if (formResult) {
     try {
-      const token = await userStore.login(emailVal.value, passwordVal.value)
-      await userStore.fetchCurrentUser(token)
+      await userStore.login(emailVal.value, passwordVal.value)
+      await userStore.fetchCurrentUser()
       createMessage('success', '登录成功, 2秒钟后将跳转至首页', 2000)
       setTimeout(() => {
         router.push({ name: 'home' })

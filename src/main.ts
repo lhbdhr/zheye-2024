@@ -10,7 +10,7 @@ const app = createApp(App)
 const pinia = createPinia()
 app.use(pinia)
 app.use(router)
-const icode = '5D356AE2F3F5D586'
+const icode = 'B2C6B83F50D8FF47'
 const globalStore = useGlobalStore()
 axios.defaults.baseURL = 'http://apis.imooc.com/api'
 axios.interceptors.request.use((config) => {

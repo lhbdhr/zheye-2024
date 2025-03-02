@@ -10,7 +10,10 @@
   >
     <p>确定要删除这篇文章吗？</p>
   </modal>
-  <article class="w-75 mx-auto mb-5 pb-3" v-if="post">
+  <article
+    class="w-75 mx-auto mb-5 pb-3"
+    v-if="post"
+  >
     <div class="image-container my-4">
       <img
         :src="imageURL"
@@ -29,12 +32,15 @@
           v-if="typeof post.author === 'object'"
         ></user-profile>
       </div>
-      <span class="col col-6 text-muted col text-end font-italic"
-        >发表于：{{ post.createdAt }}</span
-      >
+      <span class="col col-6 text-muted col text-end font-italic">
+        发表于：{{ post.createdAt }}
+      </span>
     </div>
     <div v-html="currentHTML"></div>
-    <div v-if="showEditArea" class="mt-5">
+    <div
+      v-if="showEditArea"
+      class="mt-5"
+    >
       <router-link
         :to="{ name: 'createPost', query: { id: post._id } }"
         type="button"

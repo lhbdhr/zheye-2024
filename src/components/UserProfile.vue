@@ -8,9 +8,9 @@
       />
       <div class="detail mx-2">
         <h6 class="d-block mb-0">{{ user.nickName }}</h6>
-        <span class="col text-truncate text-break text-muted d-block">{{
-          user.description
-        }}</span>
+        <span class="col text-truncate text-break text-muted d-block">
+          {{ user.description }}
+        </span>
       </div>
     </div>
   </div>
@@ -27,6 +27,6 @@ const props = defineProps({
 })
 
 const fitUrl = computed(() => {
-  return useImageURL(props.user.avatar?.url, 'avatar', 50, 50)
+  return useImageURL(props.user.avatar, 'avatar', 50, 50)
 })
 </script>

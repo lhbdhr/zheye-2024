@@ -12,10 +12,21 @@
       >
         <button class="btn btn-primary">上传成功</button>
       </slot>
-      <slot name="uploading" v-else-if="fileStatus === 'uploading'">
-        <button class="btn btn-primary" disabled>上传中...</button>
+      <slot
+        name="uploading"
+        v-else-if="fileStatus === 'uploading'"
+      >
+        <button
+          class="btn btn-primary"
+          disabled
+        >
+          上传中...
+        </button>
       </slot>
-      <slot name="default" v-else>
+      <slot
+        name="default"
+        v-else
+      >
         <button class="btn btn-primary">点击上传</button>
       </slot>
     </div>
@@ -33,14 +44,18 @@
  * 上传组件
  *
  * @props
- * @prop {String} action - url
+ * @prop {String} action - 上传的URL地址
  * @prop {Function} beforeUpload - 上传前回调方法，用于检查选择的文件是否符合要求
- * @prop {Object} uploaded - 已上传的文件
+ * @prop {Object} uploaded - 已上传的文件对象
  *
  * @emits
- * @emit {Function} file-uploaded - 发射文件上传成功事件
- * @emit {Function} file-uploaded-error - 发射文件上传失败事件
+ * @emit {Function} file-uploaded - 文件上传成功事件，传递上传成功的响应数据
+ * @emit {Function} file-uploaded-error - 文件上传失败事件，传递上传失败的错误信息
  *
+ * @slots
+ * @slot default - 默认插槽，未上传文件时显示的内容
+ * @slot uploading - 上传中插槽，文件上传过程中显示的内容
+ * @slot uploaded - 上传成功插槽，文件上传成功后显示的内容
  */
 import { ImageProps } from '@/store/Utils'
 import axios from 'axios'
@@ -78,11 +93,16 @@ type CheckFunction = (file: File) => boolean
 const fileStatus = ref<UploadStatus>(uploaded ? 'success' : 'ready')
 // 获取真实上传控件input的dom
 const fileInputRef = useTemplateRef('fileInput')
-// 触发input的点击事件
+/**
+ * 触发input的点击事件，打开文件选择对话框
+ */
 const triggerUpload = () => {
   fileInputRef.value?.click()
 }
-// 处理上传文件改变
+/**
+ * 处理文件选择变化事件
+ * @param {Event} e - 文件选择事件
+ */
 const onFileChange = (e: Event) => {
   const target = e.target as HTMLInputElement
   if (target.files) {
